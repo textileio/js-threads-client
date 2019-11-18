@@ -11,7 +11,7 @@ interface Message {
   error?: string
 }
 
-interface LogRecord {
+export interface LogRecord {
   id: string
   log_id?: string
   thread_id: string
@@ -37,7 +37,7 @@ export class Client {
   private subscriptions: Record<string, Subscription> = {}
 
   public async connect(url: string) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       this.socket = new WebSocket(url) as WebSocket
 
       this.socket.onopen = () => {
@@ -49,6 +49,7 @@ export class Client {
       }
       this.socket.onerror = (e) => {
         console.error(e)
+        reject(e)
       }
       this.socket.onmessage = (e) => {
         this.handleEvent(e)
