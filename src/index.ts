@@ -59,7 +59,7 @@ export class Client {
     return this.unary(API.ModelCreate, req)
   }
 
-  public async unary<TRequest extends ProtobufMessage, TResponse extends ProtobufMessage, M extends UnaryMethodDefinition<TRequest, TResponse>>(
+  private async unary<TRequest extends ProtobufMessage, TResponse extends ProtobufMessage, M extends UnaryMethodDefinition<TRequest, TResponse>>(
       methodDescriptor: M, req: TRequest) {
     return new Promise((resolve, reject) => {
       if (!this.host) {
