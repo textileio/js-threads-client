@@ -4,10 +4,9 @@ import {API} from '@textile/threads-api-pb/api_pb_service'
 import {
   NewStoreRequest,
   RegisterSchemaRequest,
-  ModelCreateRequest
+  ModelCreateRequest,
+  ListenRequest
 } from '@textile/threads-api-pb/api_pb'
-import {ProtobufMessage} from '@improbable-eng/grpc-web/dist/typings/message'
-import {UnaryMethodDefinition} from '@improbable-eng/grpc-web/dist/typings/service'
 
 const pack = require('../package.json')
 
@@ -59,7 +58,16 @@ export class Client {
     return this.unary(API.ModelCreate, req)
   }
 
-  private async unary<TRequest extends ProtobufMessage, TResponse extends ProtobufMessage, M extends UnaryMethodDefinition<TRequest, TResponse>>(
+  public async listen(storeID: string, modelName: string, entityID: string) {
+    const req = new ListenRequest()
+    req.setStoreid(storeID)
+    req.setModelname(modelName)
+    req.setEntityid(entityID)
+
+    return this.client(API.Listen, req)
+  }
+
+  private async unary<TRequest extends grpc.ProtobufMessage, TResponse extends grpc.ProtobufMessage, M extends grpc.UnaryMethodDefinition<TRequest, TResponse>>(
       methodDescriptor: M, req: TRequest) {
     return new Promise((resolve, reject) => {
       if (!this.host) {
@@ -83,6 +91,32 @@ export class Client {
           }
         }
       })
+    })
+  }
+
+  private async client<TRequest extends grpc.ProtobufMessage, TResponse extends grpc.ProtobufMessage, M extends grpc.MethodDefinition<TRequest, TResponse>>(
+    methodDescriptor: M, req: TRequest) {
+    return new Promise((resolve, reject) => {
+      if (!this.host) {
+        reject(new Error('host URL is not set'))
+        return
+      }
+
+      const client = grpc.client(methodDescriptor, {
+        host: this.host
+      })
+      client.onHeaders((headers: grpc.Metadata) => {
+        console.debug('onHeaders', headers)
+      })
+      client.onMessage((message: any) => {
+        console.debug('onMessage', message)
+      })
+      client.onEnd((status: grpc.Code, statusMessage: string, trailers: grpc.Metadata) => {
+        console.debug('onEnd', status, statusMessage, trailers)
+      })
+
+      client.start()
+      client.send(req)
     })
   }
 }
