@@ -5,7 +5,7 @@ import {
   StartTransactionRequest,
   ReadTransactionRequest,
   ReadTransactionReply
-} from '@textile/threads-api-pb/api_pb'
+} from '@textile/threads-client-grpc/api_pb'
 import {Transaction} from './Transaction'
 
 export class ReadTransaction extends Transaction<ReadTransactionRequest, ReadTransactionReply> {

@@ -9,7 +9,7 @@ import {
   StartTransactionRequest,
   WriteTransactionRequest,
   WriteTransactionReply
-} from '@textile/threads-api-pb/api_pb'
+} from '@textile/threads-client-grpc/api_pb'
 import {Transaction} from './Transaction'
 
 export class WriteTransaction extends Transaction<WriteTransactionRequest, WriteTransactionReply> {
