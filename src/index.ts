@@ -1,6 +1,6 @@
 import * as uuid from 'uuid'
 import {grpc} from '@improbable-eng/grpc-web'
-import {API} from '@textile/threads-api-pb/api_pb_service'
+import {API} from '@textile/threads-client-grpc/api_pb_service'
 import {
   NewStoreRequest,
   NewStoreReply,
@@ -27,7 +27,7 @@ import {
   WriteTransactionRequest,
   WriteTransactionReply,
   ListenRequest
-} from '@textile/threads-api-pb/api_pb'
+} from '@textile/threads-client-grpc/api_pb'
 import {ReadTransaction} from './ReadTransaction'
 import {WriteTransaction} from './WriteTransaction'
 
