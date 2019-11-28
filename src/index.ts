@@ -1,6 +1,6 @@
 import * as uuid from 'uuid'
-import {grpc} from '@improbable-eng/grpc-web'
-import {API} from '@textile/threads-client-grpc/api_pb_service'
+import { grpc } from '@improbable-eng/grpc-web'
+import { API } from '@textile/threads-client-grpc/api_pb_service'
 import {
   NewStoreRequest,
   NewStoreReply,
@@ -28,10 +28,9 @@ import {
   WriteTransactionReply,
   ListenRequest
 } from '@textile/threads-client-grpc/api_pb'
-import {ReadTransaction} from './ReadTransaction'
-import {WriteTransaction} from './WriteTransaction'
-
-const pack = require('../package.json')
+import { ReadTransaction } from './ReadTransaction'
+import { WriteTransaction } from './WriteTransaction'
+import * as pack from '../package.json'
 
 // interface Response<T extends grpc.ProtobufMessage> {
 //   onMessage(callback: (message: T) => void): void
@@ -47,10 +46,9 @@ export class Client {
   private host: string | undefined
   // private subscriptions: Record<string, Subscription> = {}
 
-  constructor() {
-    grpc.setDefaultTransport(grpc.FetchReadableStreamTransport({
-      credentials: 'omit'
-    }))
+  constructor(defaultTransport?: grpc.TransportFactory) {
+    const transport = defaultTransport || grpc.FetchReadableStreamTransport({ credentials: 'omit' })
+    grpc.setDefaultTransport(transport)
     // grpc.setDefaultTransport(grpc.WebsocketTransport())
   }
 

@@ -108,7 +108,7 @@ export class WriteTransaction extends Transaction<WriteTransactionRequest, Write
       const findReq = new ModelFindByIDRequest()
       findReq.setEntityid(entityID)
       const req = new WriteTransactionRequest()
-      req.setModelfindrequest(findReq)
+      req.setModelfindbyidrequest(findReq)
       this.client.onMessage((message: WriteTransactionReply) => {
         resolve(message.hasModelfindreply())
       })

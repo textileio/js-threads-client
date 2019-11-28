@@ -52,7 +52,7 @@ export class ReadTransaction extends Transaction<ReadTransactionRequest, ReadTra
       const findReq = new ModelFindByIDRequest()
       findReq.setEntityid(entityID)
       const req = new ReadTransactionRequest()
-      req.setModelfindrequest(findReq)
+      req.setModelfindbyidrequest(findReq)
       this.client.onMessage((message: ReadTransactionReply) => {
         resolve(message.hasModelfindreply())
       })
