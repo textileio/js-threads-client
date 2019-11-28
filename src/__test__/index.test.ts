@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { NodeHttpTransport } from '@improbable-eng/grpc-web-node-http-transport'
-import {Client} from '../index'
+import { Client } from '../index'
 
 const host = 'http://localhost:9091'
 const client = new Client(NodeHttpTransport())

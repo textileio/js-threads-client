@@ -4,12 +4,11 @@ import {
   ModelFindByIDRequest,
   StartTransactionRequest,
   ReadTransactionRequest,
-  ReadTransactionReply
+  ReadTransactionReply,
 } from '@textile/threads-client-grpc/api_pb'
-import {Transaction} from './Transaction'
+import { Transaction } from './Transaction'
 
 export class ReadTransaction extends Transaction<ReadTransactionRequest, ReadTransactionReply> {
-
   public async start() {
     const startReq = new StartTransactionRequest()
     startReq.setStoreid(super.storeID)
