@@ -103,7 +103,9 @@ export class Client {
     req.setModelname(modelName)
     const list: any[] = []
     values.forEach(v => {
-      v['ID'] = uuid.v4()
+      if (!v.hasOwnProperty('ID')) {
+        throw new Error('missing "ID" property')
+      }
       list.push(JSON.stringify(v))
     })
     req.setValuesList(list)

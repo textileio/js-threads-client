@@ -21,15 +21,3 @@ describe('basic client', function() {
     })
   })
 })
-
-describe('basic store', function() {
-  before(() => {
-    client = new Client(NodeHttpTransport()).setHost(host)
-  })
-  describe('.newStore', function() {
-    it('should resolve', async function() {
-      const store = await client.newStore()
-      expect(store.id).to.not.be.undefined
-    })
-  })
-})

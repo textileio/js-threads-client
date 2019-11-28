@@ -11,12 +11,12 @@ import { Transaction } from './Transaction'
 export class ReadTransaction extends Transaction<ReadTransactionRequest, ReadTransactionReply> {
   public async start() {
     const startReq = new StartTransactionRequest()
-    startReq.setStoreid(super.storeID)
-    startReq.setModelname(super.modelName)
+    startReq.setStoreid(this.storeID)
+    startReq.setModelname(this.modelName)
     const req = new ReadTransactionRequest()
     req.setStarttransactionrequest(startReq)
-    super.client.start()
-    super.client.send(req)
+    this.client.start()
+    this.client.send(req)
   }
 
   public async has(entityIDs: string[]) {
