@@ -141,27 +141,71 @@ describe('full store', function() {
     })
   })
   describe.skip('.readTransaction', () => {
-    it('', async () => {
+    it('should lead to successfull transactions for has, find, and findByID.', async () => {
       const create = await client.modelCreate(store.id, 'Person', [createPerson()])
       const entities = create.entitiesList.map(entity => JSON.parse(entity))
       const person = entities.pop()
       const transaction = client.readTransaction(store.id, 'Person')
       if (transaction !== undefined) {
-        await transaction.start()
-        const has = await transaction.has([person.ID])
-        expect(has).to.be.true
+        try {
+          await transaction.start()
+          const has = await transaction.has([person.ID])
+          expect(has).to.be.true
 
-        const find = await client.modelFindByID(store.id, 'Person', person.ID)
-        expect(find).to.not.be.undefined
-        expect(find).to.haveOwnProperty('entity')
-        const newPerson = JSON.parse(find.entity)
-        expect(newPerson).to.not.be.undefined
-        expect(newPerson).to.deep.equal(person)
-
-        await transaction.end()
+          const find = await transaction.modelFindByID(person.ID)
+          // @todo: Is this right? Should this be a boolean?
+          expect(find).to.be.true
+        } finally {
+          await transaction.end()
+        }
       } else {
         throw new Error('defined read transaction')
       }
+    })
+  })
+  describe.skip('.writeTransaction', () => {
+    it('should lead to successfull transactions for has, save, create, etc.', async () => {
+      const create = await client.modelCreate(store.id, 'Person', [createPerson()])
+      const entities = create.entitiesList.map(entity => JSON.parse(entity))
+      const person = entities.pop()
+      const transaction = client.writeTransaction(store.id, 'Person')
+      if (transaction !== undefined) {
+        try {
+          await transaction.start()
+          const newPerson = createPerson()
+          const created = await transaction.modelCreate([newPerson])
+          // @todo: Is this right? Should this be a boolean?
+          expect(created).to.be.true
+
+          const has = await transaction.has([person.ID])
+          expect(has).to.be.true
+
+          const find = await transaction.modelFindByID(person.ID)
+          // @todo: Is this right? Should this be a boolean?
+          expect(find).to.be.true
+
+          // @todo: Should probably check if person and found person are the same...
+          // but that doesn't really match the boolean responce...
+          // Test save
+          person.age = 99
+          const saved = await transaction.modelSave([person])
+          // @todo: Is this right? Should this be a boolean?
+          expect(saved).to.be.true
+          // Test delete
+          const deleted = await transaction.modelDelete([person])
+          // @todo: Is this right? Should this be a boolean?
+          expect(deleted).to.be.true
+        } finally {
+          await transaction.end()
+        }
+      } else {
+        throw new Error('defined read transaction')
+      }
+    })
+  })
+  describe.skip('.listen', () => {
+    it('should stream responses.', async () => {
+      // @todo: We don't have this fully implemented yet...
     })
   })
 })
