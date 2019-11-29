@@ -28,6 +28,7 @@ import {
   WriteTransactionRequest,
   WriteTransactionReply,
   ListenRequest,
+  ListenReply,
 } from '@textile/threads-client-grpc/api_pb'
 import * as pack from '../package.json'
 import { ReadTransaction } from './ReadTransaction'
@@ -145,12 +146,33 @@ export class Client {
     return new WriteTransaction(client, storeID, modelName)
   }
 
-  public async listen(storeID: string, modelName: string, entityID: string) {
-    const req = new ListenRequest()
-    req.setStoreid(storeID)
-    req.setModelname(modelName)
-    req.setEntityid(entityID)
-    // return this.client(API.Listen, req)
+  public async listen(
+    storeID: string,
+    modelName: string,
+    entityID: string,
+    callback: (reply: ListenReply.AsObject) => void,
+  ) {
+    return new Promise((resolve, reject) => {
+      const req = new ListenRequest()
+      req.setStoreid(storeID)
+      req.setModelname(modelName)
+      req.setEntityid(entityID)
+      const client = grpc.client(API.Listen, {
+        host: this.host,
+      }) as grpc.Client<ListenRequest, ListenReply>
+      client.onMessage((message: ListenReply) => {
+        callback(message.toObject())
+      })
+      client.onEnd((status: grpc.Code, message: string) => {
+        if (status !== grpc.Code.OK) {
+          reject(new Error(message))
+        } else {
+          resolve()
+        }
+      })
+      client.start()
+      client.send(req)
+    })
   }
 
   private async unary<
