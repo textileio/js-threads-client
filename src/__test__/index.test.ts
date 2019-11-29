@@ -10,8 +10,7 @@ import { NewStoreReply } from '@textile/threads-client-grpc/api_pb'
 import { WriteTransaction } from 'src/WriteTransaction'
 import { Client } from '../index'
 
-const host = 'http://localhost:9091'
-let client: Client
+const client = new Client('http://localhost:9091', grpc.WebsocketTransport())
 
 const personSchema = {
   $id: 'https://example.com/person.schema.json',
@@ -51,9 +50,6 @@ const createPerson = () => {
 
 describe('full store', function() {
   let store: NewStoreReply.AsObject
-  before(() => {
-    client = new Client(grpc.WebsocketTransport()).setHost(host)
-  })
   describe('.newStore', () => {
     it('response should be defined and have an id', async () => {
       store = await client.newStore()
