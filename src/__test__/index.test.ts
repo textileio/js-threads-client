@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable import/first */
+// Some hackery to get WebSocket in the global namespace
+// @todo: Find a nicer way to do this...
 ;(global as any).WebSocket = require('isomorphic-ws')
 
 import { expect } from 'chai'
-// import { NodeHttpTransport } from '@improbable-eng/grpc-web-node-http-transport'
 import { grpc } from '@improbable-eng/grpc-web'
 import { NewStoreReply } from '@textile/threads-client-grpc/api_pb'
 import { WriteTransaction } from 'src/WriteTransaction'
