@@ -148,33 +148,26 @@ export class Client {
     return new WriteTransaction(client, storeID, modelName)
   }
 
-  public async listen(
-    storeID: string,
-    modelName: string,
-    entityID: string,
-    callback: (reply: ListenReply.AsObject) => void,
-  ) {
-    return new Promise((resolve, reject) => {
-      const req = new ListenRequest()
-      req.setStoreid(storeID)
-      req.setModelname(modelName)
-      req.setEntityid(entityID)
-      const client = grpc.client(API.Listen, {
-        host: this.host,
-      }) as grpc.Client<ListenRequest, ListenReply>
-      client.onMessage((message: ListenReply) => {
-        callback(message.toObject())
-      })
-      client.onEnd((status: grpc.Code, message: string) => {
-        if (status !== grpc.Code.OK) {
-          reject(new Error(message))
-        } else {
-          resolve()
-        }
-      })
-      client.start()
-      client.send(req)
+  public listen(storeID: string, modelName: string, entityID: string, callback: (reply: ListenReply.AsObject) => void) {
+    const req = new ListenRequest()
+    req.setStoreid(storeID)
+    req.setModelname(modelName)
+    req.setEntityid(entityID)
+    const client = grpc.client(API.Listen, {
+      host: this.host,
+    }) as grpc.Client<ListenRequest, ListenReply>
+    client.onMessage((message: ListenReply) => {
+      callback(message.toObject())
     })
+    client.onEnd((status: grpc.Code, message: string) => {
+      if (status !== grpc.Code.OK) {
+        throw new Error(message)
+      }
+    })
+    client.start()
+    client.send(req)
+    // Bind to client here because the close call uses 'this'...
+    return client.close.bind(client)
   }
 
   private async unary<
