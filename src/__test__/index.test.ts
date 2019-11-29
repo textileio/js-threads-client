@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable import/first */
-// Some hackery to get WebSocket in the global namespace
+// Some hackery to get WebSocket in the global namespace on nodejs
 // @todo: Find a nicer way to do this...
 ;(global as any).WebSocket = require('isomorphic-ws')
 
