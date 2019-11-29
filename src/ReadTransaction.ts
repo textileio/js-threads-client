@@ -1,7 +1,10 @@
 import {
   ModelHasRequest,
+  ModelHasReply,
   ModelFindRequest,
+  ModelFindReply,
   ModelFindByIDRequest,
+  ModelFindByIDReply,
   StartTransactionRequest,
   ReadTransactionRequest,
   ReadTransactionReply,
@@ -20,13 +23,14 @@ export class ReadTransaction extends Transaction<ReadTransactionRequest, ReadTra
   }
 
   public async has(entityIDs: string[]) {
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<ModelHasReply.AsObject>((resolve, reject) => {
       const hasReq = new ModelHasRequest()
       hasReq.setEntityidsList(entityIDs)
       const req = new ReadTransactionRequest()
       req.setModelhasrequest(hasReq)
       this.client.onMessage((message: ReadTransactionReply) => {
-        resolve(message.hasModelhasreply())
+        const reply = message.getModelhasreply()
+        resolve(reply ? reply.toObject() : undefined)
       })
       this.setReject(reject)
       this.client.send(req)
@@ -34,12 +38,13 @@ export class ReadTransaction extends Transaction<ReadTransactionRequest, ReadTra
   }
 
   public async modelFind() {
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<ModelFindReply.AsObject>((resolve, reject) => {
       const findReq = new ModelFindRequest()
       const req = new ReadTransactionRequest()
       req.setModelfindrequest(findReq)
       this.client.onMessage((message: ReadTransactionReply) => {
-        resolve(message.hasModelfindreply())
+        const reply = message.getModelfindreply()
+        resolve(reply ? reply.toObject() : undefined)
       })
       this.setReject(reject)
       this.client.send(req)
@@ -47,13 +52,14 @@ export class ReadTransaction extends Transaction<ReadTransactionRequest, ReadTra
   }
 
   public async modelFindByID(entityID: string) {
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<ModelFindByIDReply.AsObject>((resolve, reject) => {
       const findReq = new ModelFindByIDRequest()
       findReq.setEntityid(entityID)
       const req = new ReadTransactionRequest()
       req.setModelfindbyidrequest(findReq)
       this.client.onMessage((message: ReadTransactionReply) => {
-        resolve(message.hasModelfindreply())
+        const reply = message.getModelfindbyidreply()
+        resolve(reply ? reply.toObject() : undefined)
       })
       this.setReject(reject)
       this.client.send(req)

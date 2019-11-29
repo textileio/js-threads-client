@@ -1,6 +1,11 @@
+/* eslint-disable import/first */
+;(global as any).WebSocket = require('isomorphic-ws')
+
 import { expect } from 'chai'
-import { NodeHttpTransport } from '@improbable-eng/grpc-web-node-http-transport'
+// import { NodeHttpTransport } from '@improbable-eng/grpc-web-node-http-transport'
+import { grpc } from '@improbable-eng/grpc-web'
 import { NewStoreReply } from '@textile/threads-client-grpc/api_pb'
+import { WriteTransaction } from 'src/WriteTransaction'
 import { Client } from '../index'
 
 const host = 'http://localhost:9091'
@@ -45,7 +50,7 @@ const createPerson = () => {
 describe('full store', function() {
   let store: NewStoreReply.AsObject
   before(() => {
-    client = new Client(NodeHttpTransport()).setHost(host)
+    client = new Client(grpc.WebsocketTransport()).setHost(host)
   })
   describe('.newStore', () => {
     it('response should be defined and have an id', async () => {
@@ -140,7 +145,8 @@ describe('full store', function() {
       expect(entity).to.have.property('ID')
     })
   })
-  describe.skip('.readTransaction', () => {
+  describe('.readTransaction', () => {
+    // @todo: Break this up like the writeTransaction example
     it('should lead to successfull transactions for has, find, and findByID.', async () => {
       const create = await client.modelCreate(store.id, 'Person', [createPerson()])
       const entities = create.entitiesList.map(entity => JSON.parse(entity))
@@ -150,57 +156,83 @@ describe('full store', function() {
         try {
           await transaction.start()
           const has = await transaction.has([person.ID])
-          expect(has).to.be.true
+          expect(has).to.not.be.undefined
+          expect(has).to.have.property('exists', true)
 
           const find = await transaction.modelFindByID(person.ID)
-          // @todo: Is this right? Should this be a boolean?
-          expect(find).to.be.true
+          expect(find).to.not.be.undefined
+          expect(find).to.haveOwnProperty('entity')
+          const entity = JSON.parse(find.entity)
+          expect(entity).to.not.be.undefined
+          expect(entity).to.have.property('firstName', 'Adam')
+          expect(entity).to.have.property('lastName', 'Doe')
+          expect(entity).to.have.property('age', 21)
+          expect(entity).to.have.property('ID')
         } finally {
-          await transaction.end()
+          return await transaction.end()
         }
+      } else {
+        throw new Error('undefined read transaction')
+      }
+    })
+  })
+  describe('.writeTransaction', () => {
+    let existingPerson: any
+    let transaction: WriteTransaction | undefined
+    before(async () => {
+      const create = await client.modelCreate(store.id, 'Person', [createPerson()])
+      const entities = create.entitiesList.map(entity => JSON.parse(entity))
+      existingPerson = entities.pop()
+      transaction = client.writeTransaction(store.id, 'Person')
+    })
+    it('should start a transaction', async () => {
+      if (transaction !== undefined) {
+        await transaction.start()
       } else {
         throw new Error('defined read transaction')
       }
     })
-  })
-  describe.skip('.writeTransaction', () => {
-    it('should lead to successfull transactions for has, save, create, etc.', async () => {
-      const create = await client.modelCreate(store.id, 'Person', [createPerson()])
-      const entities = create.entitiesList.map(entity => JSON.parse(entity))
-      const person = entities.pop()
-      const transaction = client.writeTransaction(store.id, 'Person')
-      if (transaction !== undefined) {
-        try {
-          await transaction.start()
-          const newPerson = createPerson()
-          const created = await transaction.modelCreate([newPerson])
-          // @todo: Is this right? Should this be a boolean?
-          expect(created).to.be.true
-
-          const has = await transaction.has([person.ID])
-          expect(has).to.be.true
-
-          const find = await transaction.modelFindByID(person.ID)
-          // @todo: Is this right? Should this be a boolean?
-          expect(find).to.be.true
-
-          // @todo: Should probably check if person and found person are the same...
-          // but that doesn't really match the boolean responce...
-          // Test save
-          person.age = 99
-          const saved = await transaction.modelSave([person])
-          // @todo: Is this right? Should this be a boolean?
-          expect(saved).to.be.true
-          // Test delete
-          const deleted = await transaction.modelDelete([person])
-          // @todo: Is this right? Should this be a boolean?
-          expect(deleted).to.be.true
-        } finally {
-          await transaction.end()
-        }
-      } else {
-        throw new Error('defined read transaction')
-      }
+    it('should be able to create an entity', async () => {
+      const newPerson = createPerson()
+      const created = await transaction!.modelCreate([newPerson])
+      expect(created).to.not.be.undefined
+      expect(created).to.haveOwnProperty('entitiesList')
+      const entities = created.entitiesList.map(entity => JSON.parse(entity))
+      expect(entities).to.have.nested.property('[0].firstName', 'Adam')
+      expect(entities).to.have.nested.property('[0].lastName', 'Doe')
+      expect(entities).to.have.nested.property('[0].age', 21)
+      expect(entities).to.have.nested.property('[0].ID')
+    })
+    it('should able to check for an existing entity', async () => {
+      const has = await transaction!.has([existingPerson.ID])
+      expect(has).to.not.be.undefined
+      expect(has).to.have.property('exists', true)
+    })
+    it('should be able to find an existing entity', async () => {
+      const find = await transaction!.modelFindByID(existingPerson.ID)
+      expect(find).to.not.be.undefined
+      expect(find).to.haveOwnProperty('entity')
+      const entity = JSON.parse(find.entity)
+      expect(entity).to.not.be.undefined
+      expect(entity).to.have.property('firstName', 'Adam')
+      expect(entity).to.have.property('lastName', 'Doe')
+      expect(entity).to.have.property('age', 21)
+      expect(entity).to.have.property('ID')
+      expect(entity).to.deep.equal(existingPerson)
+    })
+    it('should be able to save an existing entity', async () => {
+      existingPerson.age = 99
+      const saved = await transaction!.modelSave([existingPerson])
+      expect(saved).to.not.be.undefined
+      // @todo: Is this really what we want this response to look like? Empty object?
+      expect(saved).to.be.empty
+      const deleted = await transaction!.modelDelete([existingPerson.ID])
+      expect(deleted).to.not.be.undefined
+      // @todo: Is this really what we want this response to look like? Empty object?
+      expect(deleted).to.be.empty
+    })
+    it('should be able to close/end an transaction', async () => {
+      await transaction!.end()
     })
   })
   describe.skip('.listen', () => {

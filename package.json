@@ -55,7 +55,9 @@
     "@textile/threads-client-grpc": "0.0.1",
     "@types/google-protobuf": "^3.7.2",
     "google-protobuf": "^3.10.0",
-    "uuid": "^3.3.3"
+    "isomorphic-ws": "^4.0.1",
+    "uuid": "^3.3.3",
+    "ws": "^7.2.0"
   },
   "devDependencies": {
     "@improbable-eng/grpc-web-node-http-transport": "^0.11.0",
