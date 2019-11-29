@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { NodeHttpTransport } from '@improbable-eng/grpc-web-node-http-transport'
+import { NodeHttpTransport } from '@improbable-eng/grpc-web-node-http-transport/lib'
 import { Client } from '../index'
 
 const client = new Client('http://localhost:9091', NodeHttpTransport())
