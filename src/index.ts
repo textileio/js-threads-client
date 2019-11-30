@@ -30,6 +30,7 @@ import {
   ListenRequest,
   ListenReply,
 } from '@textile/threads-client-grpc/api_pb'
+import { fromBase64 } from 'b64-lite'
 import * as pack from '../package.json'
 import { ReadTransaction } from './ReadTransaction'
 import { WriteTransaction } from './WriteTransaction'
@@ -127,7 +128,7 @@ export class Client {
     req.setQueryjson(Buffer.from(JSON.stringify(query)))
     const res = (await this.unary(API.ModelFind, req)) as ModelFindReply.AsObject
     // @todo: Do we want to do this? Otherwise, the caller has to decode the base64 string...
-    res.entitiesList = res.entitiesList.map(entity => Buffer.from(entity as string, 'base64').toString())
+    res.entitiesList = res.entitiesList.map(entity => fromBase64(entity as string))
     return res
   }
 
