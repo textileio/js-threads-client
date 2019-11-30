@@ -125,7 +125,7 @@ export class Client {
     req.setStoreid(storeID)
     req.setModelname(modelName)
     req.setQueryjson(Buffer.from(JSON.stringify(query)))
-    const res = await this.unary(API.ModelFind, req) as ModelFindReply.AsObject
+    const res = (await this.unary(API.ModelFind, req)) as ModelFindReply.AsObject
     // @todo: Do we want to do this? Otherwise, the caller has to decode the base64 string...
     res.entitiesList = res.entitiesList.map(entity => Buffer.from(entity as string, 'base64').toString())
     return res
