@@ -8,6 +8,8 @@ defaults: &defaults
 jobs:
     lint-test:
         <<: *defaults    
+        docker:
+            - image: selenium/standalone-firefox:3.141.59
         steps:
             - checkout
             - restore_cache:
