@@ -11,7 +11,8 @@
     "esModuleInterop": true,
     "strict": true,
     "outDir": "dist",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "types": ["node", "mocha", "webdriverio"]
   },
   "include": [
     "src"

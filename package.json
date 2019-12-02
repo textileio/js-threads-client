@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "test": "ts-mocha -p tsconfig.json src/__test__/**/*.test.ts",
+    "test2": "ts-mocha -p tsconfig.json src/__test__/**/*.test.ts",
+    "test": "rimraf reports/* && npm run report:history && ./node_modules/.bin/wdio wdio.conf.js",
     "lint": "eslint --fix --ext .mjs,.js,.jsx,.ts,.tsx src",
     "docs": "typedoc",
     "precommit": "npm run lint && npm test",
@@ -15,7 +16,11 @@
     "release": "npm version patch",
     "postversion": "git push --follow-tags",
     "browser": "webpack --mode production",
-    "serve": "webpack-dev-server --mode development --progress --color"
+    "serve": "webpack-dev-server --mode development --progress --color",
+    "report:history": "mkdir -p allure-report/history allure-results/history && cp -a allure-report/history allure-results/",
+    "clean-report": "rimraf allure-results",
+    "run-report": "allure generate allure-results/ --clean && allure open -p 8000",
+    "report": "npm run clean-report && npm run test ; npm run run-report"
   },
   "engines": {
     "node": ">= 10.0.0",
@@ -50,6 +55,14 @@
     "@types/uuid": "^3.4.6",
     "@typescript-eslint/eslint-plugin": "^2.9.0",
     "@typescript-eslint/parser": "^2.9.0",
+    "@wdio/allure-reporter": "^5.13.2",
+    "@wdio/cli": "^5.14.2",
+    "@wdio/local-runner": "^5.14.0",
+    "@wdio/mocha-framework": "^5.14.0",
+    "@wdio/selenium-standalone-service": "^5.13.2",
+    "@wdio/spec-reporter": "^5.13.2",
+    "@wdio/sync": "^5.14.0",
+    "allure-commandline": "^2.13.0",
     "chai": "^4.2.0",
     "eslint": "^6.7.1",
     "eslint-config-prettier": "^6.7.0",
@@ -64,11 +77,15 @@
     "prettier-eslint": "^9.0.0",
     "ts-loader": "^6.2.1",
     "ts-mocha": "^6.0.0",
+    "ts-node": "^8.2.0",
+    "tsconfig-paths": "^3.8.0",
+    "rimraf": "^2.6.3",
     "typedoc": "^0.15.0",
     "typedoc-plugin-markdown": "^2.2.11",
     "typescript": "^3.7.2",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.9.0"
+    "webpack-dev-server": "^3.9.0",
+    "webdriverio": "^5.14.0"
   }
 }
