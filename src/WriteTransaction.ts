@@ -50,21 +50,20 @@ export class WriteTransaction extends Transaction<WriteTransactionRequest, Write
   }
 
   public async modelSave(values: any[]) {
-    return new Promise<ModelSaveReply.AsObject>((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const saveReq = new ModelSaveRequest()
       const list: any[] = []
       values.forEach(v => {
         if (!v.hasOwnProperty('ID')) {
-          throw new Error('missing "ID" property')
+          v['ID'] = '' // The server will add an ID if empty.
         }
         list.push(JSON.stringify(v))
       })
       saveReq.setValuesList(list)
       const req = new WriteTransactionRequest()
       req.setModelsaverequest(saveReq)
-      this.client.onMessage((message: WriteTransactionReply) => {
-        const reply = message.getModelsavereply()
-        resolve(reply ? reply.toObject() : undefined)
+      this.client.onMessage((_message: WriteTransactionReply) => {
+        resolve()
       })
       super.setReject(reject)
       this.client.send(req)
@@ -72,14 +71,13 @@ export class WriteTransaction extends Transaction<WriteTransactionRequest, Write
   }
 
   public async modelDelete(entityIDs: string[]) {
-    return new Promise<ModelDeleteReply.AsObject>((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const deleteReq = new ModelDeleteRequest()
       deleteReq.setEntityidsList(entityIDs)
       const req = new WriteTransactionRequest()
       req.setModeldeleterequest(deleteReq)
-      this.client.onMessage((message: WriteTransactionReply) => {
-        const reply = message.getModeldeletereply()
-        resolve(reply ? reply.toObject() : undefined)
+      this.client.onMessage((_message: WriteTransactionReply) => {
+        resolve()
       })
       super.setReject(reject)
       this.client.send(req)

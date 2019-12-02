@@ -68,25 +68,19 @@ describe('Client', function() {
   describe('.registerSchema', () => {
     it('response should be defined and be an empty object', async () => {
       const register = await client.registerSchema(store.id, 'Person', personSchema)
-      expect(register).to.not.be.undefined
-      // @todo: Is this really what we want this response to look like? Empty object?
-      expect(register).to.be.empty
+      expect(register).to.be.undefined
     })
   })
   describe('.start', () => {
     it('response should be defined and be an empty object', async () => {
       const start = await client.start(store.id)
-      expect(start).to.not.be.undefined
-      // @todo: Is this really what we want this response to look like? Empty object?
-      expect(start).to.be.empty
+      expect(start).to.be.undefined
     })
   })
   describe.skip('.startFromAddress', () => {
     it('response should be defined and be an empty object', async () => {
       const start = await client.startFromAddress(store.id, '', '', '')
-      expect(start).to.not.be.undefined
-      // @todo: Is this really what we want this response to look like? Empty object?
-      expect(start).to.be.empty
+      expect(start).to.be.undefined
     })
   })
   describe('.modelCreate', () => {
@@ -108,9 +102,7 @@ describe('Client', function() {
       const person: Person = entities.pop()
       person.age = 30
       const save = await client.modelSave(store.id, 'Person', [person])
-      expect(save).to.not.be.undefined
-      // @todo: Is this really what we want this response to look like? Empty object?
-      expect(save).to.be.empty
+      expect(save).to.be.undefined
     })
   })
   describe('.modelDelete', () => {
@@ -119,9 +111,7 @@ describe('Client', function() {
       const entities = create.entitiesList.map(entity => JSON.parse(entity))
       const person: Person = entities.pop()
       const deleted = await client.modelDelete(store.id, 'Person', [person.ID])
-      expect(deleted).to.not.be.undefined
-      // @todo: Is this really what we want this response to look like? Empty object?
-      expect(deleted).to.be.empty
+      expect(deleted).to.be.undefined
     })
   })
   describe('.modelHas', () => {
@@ -228,13 +218,9 @@ describe('Client', function() {
     it('should be able to save an existing entity', async () => {
       existingPerson.age = 99
       const saved = await transaction!.modelSave([existingPerson])
-      expect(saved).to.not.be.undefined
-      // @todo: Is this really what we want this response to look like? Empty object?
-      expect(saved).to.be.empty
+      expect(saved).to.be.undefined
       const deleted = await transaction!.modelDelete([existingPerson.ID])
-      expect(deleted).to.not.be.undefined
-      // @todo: Is this really what we want this response to look like? Empty object?
-      expect(deleted).to.be.empty
+      expect(deleted).to.be.undefined
     })
     it('should be able to close/end an transaction', async () => {
       await transaction!.end()

@@ -57,13 +57,15 @@ export class Client {
     req.setStoreid(storeID)
     req.setName(name)
     req.setSchema(JSON.stringify(schema))
-    return this.unary(API.RegisterSchema, req) as Promise<RegisterSchemaReply.AsObject>
+    await this.unary(API.RegisterSchema, req)
+    return
   }
 
   public async start(storeID: string) {
     const req = new StartRequest()
     req.setStoreid(storeID)
-    return this.unary(API.Start, req) as Promise<StartReply.AsObject>
+    await this.unary(API.Start, req)
+    return
   }
 
   public async startFromAddress(storeID: string, address: string, followKey: string, readKey: string) {
@@ -72,7 +74,8 @@ export class Client {
     req.setAddress(address)
     req.setFollowkey(followKey)
     req.setReadkey(readKey)
-    return this.unary(API.StartFromAddress, req) as Promise<StartFromAddressReply.AsObject>
+    await this.unary(API.StartFromAddress, req)
+    return
   }
 
   public async modelCreate(storeID: string, modelName: string, values: any[]) {
@@ -95,12 +98,13 @@ export class Client {
     const list: any[] = []
     values.forEach(v => {
       if (!v.hasOwnProperty('ID')) {
-        throw new Error('missing "ID" property')
+        v['ID'] = '' // The server will add an ID if empty.
       }
       list.push(JSON.stringify(v))
     })
     req.setValuesList(list)
-    return this.unary(API.ModelSave, req) as Promise<ModelSaveReply.AsObject>
+    await this.unary(API.ModelSave, req)
+    return
   }
 
   public async modelDelete(storeID: string, modelName: string, entityIDs: string[]) {
@@ -108,7 +112,8 @@ export class Client {
     req.setStoreid(storeID)
     req.setModelname(modelName)
     req.setEntityidsList(entityIDs)
-    return this.unary(API.ModelDelete, req) as Promise<ModelDeleteReply.AsObject>
+    await this.unary(API.ModelDelete, req)
+    return
   }
 
   public async modelHas(storeID: string, modelName: string, entityIDs: string[]) {
