@@ -10,6 +10,7 @@
     "test:node": "mocha --require ts-node/register --require source-map-support/register --recursive src/__test__/**/*.test.ts",
     "test:node:coverage": "nyc npm run test",
     "test:browser": "rimraf reports/* && npm run report:history && ./node_modules/.bin/wdio wdio.conf.js",
+    "test": "npm run test:node && npm run test:browser",
     "lint": "eslint --fix --ext .mjs,.js,.jsx,.ts,.tsx src",
     "docs": "typedoc",
     "precommit": "npm run lint && npm test",
