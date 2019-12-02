@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "mocha": "ts-mocha -p tsconfig.json src/__test__/**/*.test.ts",
+    "test:node": "ts-mocha -p tsconfig.json src/__test__/**/*.test.ts",
     "lint": "eslint --fix --ext .mjs,.js,.jsx,.ts,.tsx src",
     "docs": "typedoc",
     "precommit": "npm run lint && npm test",

@@ -4,12 +4,9 @@ defaults: &defaults
     working_directory: ~/js-threads-client
     docker:
         - image: node:10.0.0
-
 jobs:
     lint-test:
         <<: *defaults    
-        docker:
-            - image: selenium/standalone-firefox:3.141.59
         steps:
             - checkout
             - restore_cache:
@@ -27,7 +24,7 @@ jobs:
                 name: Test
                 command: |
                     mkdir -p test-results/jest
-                    npm run test
+                    npm run test:node
                 environment:
                     JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
             - store_test_results:
