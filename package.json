@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "test2": "ts-mocha -p tsconfig.json src/__test__/**/*.test.ts",
+    "mocha": "ts-mocha -p tsconfig.json src/__test__/**/*.test.ts",
     "test": "rimraf reports/* && npm run report:history && ./node_modules/.bin/wdio wdio.conf.js",
     "lint": "eslint --fix --ext .mjs,.js,.jsx,.ts,.tsx src",
     "docs": "typedoc",

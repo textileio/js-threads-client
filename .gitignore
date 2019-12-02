@@ -1,6 +1,9 @@
 # Build files
 dist/
 
+# Test results
+allure-results/
+
 # Logs
 logs
 *.log
