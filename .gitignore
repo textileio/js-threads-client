@@ -3,6 +3,7 @@ dist/
 
 # Test results
 allure-results/
+allure-result
 
 # Logs
 logs
