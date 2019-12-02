@@ -6,7 +6,7 @@ defaults: &defaults
         - image: circleci/node:10-browsers
 jobs:
     lint-test:
-        <<: *defaults    
+        <<: *defaults
         steps:
             - checkout
             - restore_cache:
@@ -23,14 +23,12 @@ jobs:
             - run:
                 name: Test
                 command: |
-                    mkdir -p test-results/jest
+                    mkdir -p allure-results
                     npm run test
-                environment:
-                    JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
             - store_test_results:
-                path: test-results
+                path: allure-results
             - store_artifacts:
-                path: test-results
+                path: allure-results
     deploy:
         <<: *defaults
         steps:
@@ -48,7 +46,7 @@ jobs:
             - run:
                 name: Publish Package
                 command: npm publish --access=public --unsafe-perm
-                        
+
 workflows:
     version: 2
     js-threads-client:
