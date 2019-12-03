@@ -29,8 +29,7 @@ import { fromBase64, toBase64 } from 'b64-lite'
 import * as pack from '../package.json'
 import { ReadTransaction } from './ReadTransaction'
 import { WriteTransaction } from './WriteTransaction'
-import { JSONQuery } from './query'
-import { Entity, EntityList } from './models'
+import { JSONQuery, Entity, EntityList } from './models'
 
 export class Client {
   public static version(): string {
