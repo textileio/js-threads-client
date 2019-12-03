@@ -286,7 +286,6 @@ describe('Client', function() {
   })
   describe('Query', () => {
     before(async () => {
-      await client.modelCreate(store.id, 'Person', [createPerson()])
       const people = [...Array(8)].map((_, i) => {
         const person = createPerson()
         person.age = 60 + i
