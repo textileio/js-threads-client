@@ -31,6 +31,9 @@ import { ReadTransaction } from './ReadTransaction'
 import { WriteTransaction } from './WriteTransaction'
 import { JSONQuery, Entity, EntityList } from './models'
 
+export { JSONQuery, Entity, EntityList }
+export { Query, Where } from './query'
+
 export class Client {
   public static version(): string {
     return pack.version
@@ -199,7 +202,7 @@ export class Client {
         request: req,
         host: this.host,
         onEnd: res => {
-          const { status, statusMessage, headers, message, trailers } = res
+          const { status, statusMessage, message } = res
           if (status === grpc.Code.OK) {
             if (message) {
               resolve(message.toObject())

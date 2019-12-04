@@ -40,14 +40,3 @@ export interface JSONQuery {
   ors?: JSONQuery[]
   sort?: JSONSort
 }
-
-// Sanity check
-const _: JSONQuery = {
-  ands: [
-    {
-      fieldPath: 'lastName',
-      operation: JSONOperation.Eq,
-      value: { string: 'Farmer' },
-    },
-  ],
-}

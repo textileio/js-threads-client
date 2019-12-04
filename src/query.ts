@@ -113,11 +113,3 @@ export class Query implements JSONQuery {
     return this
   }
 }
-
-// Sanity check
-const _ = Query.where('A')
-  .eq(5)
-  .and('B')
-  .gt(6)
-  // Alternative specification
-  .or(new Where('B').eq(5))
