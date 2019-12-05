@@ -1,9 +1,12 @@
 {
   "name": "@textile/threads-client",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Textile's JS client for interacting with remote Threads.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
@@ -54,7 +57,7 @@
     "IPFS",
     "p2p"
   ],
-  "author": "textile.io",
+  "author": "Textile",
   "license": "MIT",
   "dependencies": {
     "@improbable-eng/grpc-web": "^0.11.0",
