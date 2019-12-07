@@ -105,7 +105,12 @@ export class Client {
    * @param followKey A base58-encoded symmetric key. Should be 44 bytes in length.
    * @param readKey  A base58-encoded symmetric key. Should be 44 bytes in length.
    */
-  public async startFromAddress(storeID: string, address: string, followKey: string, readKey: string) {
+  public async startFromAddress(
+    storeID: string,
+    address: string,
+    followKey: string | Uint8Array,
+    readKey: string | Uint8Array,
+  ) {
     const req = new StartFromAddressRequest()
     req.setStoreid(storeID)
     req.setAddress(address)
