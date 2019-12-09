@@ -119,7 +119,7 @@ export class Client {
   }
 
   /**
-   * createInvite returns invite 'links' unseful for inviting other peers to join a given thread.
+   * getStoreLink returns invite 'links' unseful for inviting other peers to join a given store/thread.
    * @param storeID The id of the store for which to create the invite.
    */
   public async getStoreLink(storeID: string) {
@@ -128,6 +128,7 @@ export class Client {
     const res = (await this.unary(API.GetStoreLink, req)) as GetStoreLinkReply.AsObject
     const invites = []
     for (const addr of res.addressesList) {
+      //@todo: Try to avoid using Buffer directly here in the future
       const fk = Buffer.from(fromBase64(res.followkey as string))
       const rk = Buffer.from(fromBase64(res.readkey as string))
       invites.push(`${addr}?${encode(fk)}&${encode(rk)}`)
