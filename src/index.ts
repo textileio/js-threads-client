@@ -24,8 +24,8 @@ import {
   WriteTransactionReply,
   ListenRequest,
   ListenReply,
-  CreateInviteRequest,
-  CreateInviteReply,
+  GetStoreLinkRequest,
+  GetStoreLinkReply,
 } from '@textile/threads-client-grpc/api_pb'
 import { fromBase64, toBase64 } from 'b64-lite'
 import { encode } from 'bs58'
@@ -122,10 +122,10 @@ export class Client {
    * createInvite returns invite 'links' unseful for inviting other peers to join a given thread.
    * @param storeID The id of the store for which to create the invite.
    */
-  public async createInvite(storeID: string) {
-    const req = new CreateInviteRequest()
+  public async getStoreLink(storeID: string) {
+    const req = new GetStoreLinkRequest()
     req.setStoreid(storeID)
-    const res = (await this.unary(API.CreateInvite, req)) as CreateInviteReply.AsObject
+    const res = (await this.unary(API.GetStoreLink, req)) as GetStoreLinkReply.AsObject
     const invites = []
     for (const addr of res.addressesList) {
       const fk = Buffer.from(fromBase64(res.followkey as string))
