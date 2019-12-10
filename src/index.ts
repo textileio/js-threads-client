@@ -113,7 +113,7 @@ export class Client {
    * startFromAddress initializes the client with the given store, connecting to the given
    * thread address (database). It should be called before any operation on the store, and is an
    * alternative to start, which creates a local store. startFromAddress should also include the
-   * read and follow (replicator) keys, which should be base58-encoded random bytes.
+   * read and follow (replicator) keys, which should be a Buffer or Uint8Array of random bytes.
    * See `getStoreLink` for a possible source of the address and keys.
    * @param storeID The id of the store with which to register.
    * @param address The address for the thread with which to connect. Should be of the form /ip4/<url/ip-address>/tcp/<port>/p2p/<peer-id>/thread/<thread-id>
