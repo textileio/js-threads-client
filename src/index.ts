@@ -27,8 +27,7 @@ import {
   GetStoreLinkRequest,
   GetStoreLinkReply,
 } from '@textile/threads-client-grpc/api_pb'
-import { fromBase64, toBase64 } from 'b64-lite'
-import { encode } from 'bs58'
+import { encode, decode } from 'bs58'
 import * as pack from '../package.json'
 import { ReadTransaction } from './ReadTransaction'
 import { WriteTransaction } from './WriteTransaction'
@@ -59,7 +58,7 @@ export class Client {
   /**
    * started stores whether start or startFromAddress has been called.
    */
-  private started: boolean = false
+  private started = false
 
   /**
    * Client creates a new gRPC client instance.
@@ -113,12 +112,13 @@ export class Client {
    * startFromAddress initializes the client with the given store, connecting to the given
    * thread address (database). It should be called before any operation on the store, and is an
    * alternative to start, which creates a local store. startFromAddress should also include the
-   * read and follow (replicator) keys, which should be a Buffer or Uint8Array of random bytes.
+   * read and follow keys, which should be Buffer, Uint8Array or base58-encoded strings.
    * See `getStoreLink` for a possible source of the address and keys.
    * @param storeID The id of the store with which to register.
-   * @param address The address for the thread with which to connect. Should be of the form /ip4/<url/ip-address>/tcp/<port>/p2p/<peer-id>/thread/<thread-id>
-   * @param followKey A symmetric key. Should be a Buffer or Uint8Array of length 44 bytes.
-   * @param readKey  A symmetric key. Should be a Buffer or Uint8Array of length 44 bytes.
+   * @param address The address for the thread with which to connect.
+   * Should be of the form /ip4/<url/ip-address>/tcp/<port>/p2p/<peer-id>/thread/<thread-id>
+   * @param followKey Symmetric key. Uint8Array or base58-encoded string of length 44 bytes.
+   * @param readKey Symmetric key. Uint8Array or base58-encoded string of length 44 bytes.
    */
   public async startFromAddress(
     storeID: string,
@@ -129,8 +129,8 @@ export class Client {
     const req = new StartFromAddressRequest()
     req.setStoreid(storeID)
     req.setAddress(address)
-    req.setFollowkey(followKey)
-    req.setReadkey(readKey)
+    req.setFollowkey(typeof followKey === 'string' ? decode(followKey) : followKey)
+    req.setReadkey(typeof readKey === 'string' ? decode(readKey) : readKey)
     await this.unary(API.StartFromAddress, req)
     this.started = true
     return
@@ -149,9 +149,8 @@ export class Client {
     const res = (await this.unary(API.GetStoreLink, req)) as GetStoreLinkReply.AsObject
     const invites = []
     for (const addr of res.addressesList) {
-      //@todo: Try to avoid using Buffer directly here in the future
-      const fk = Buffer.from(fromBase64(res.followkey as string))
-      const rk = Buffer.from(fromBase64(res.readkey as string))
+      const fk = Buffer.from(res.followkey as string, 'base64')
+      const rk = Buffer.from(res.readkey as string, 'base64')
       invites.push(`${addr}?${encode(fk)}&${encode(rk)}`)
     }
     return invites
@@ -257,10 +256,11 @@ export class Client {
     const req = new ModelFindRequest()
     req.setStoreid(storeID)
     req.setModelname(modelName)
-    req.setQueryjson(toBase64(JSON.stringify(query)))
+    // @todo: Find a more isomorphic way to do this base64 round-trip
+    req.setQueryjson(Buffer.from(JSON.stringify(query)).toString('base64'))
     const res = (await this.unary(API.ModelFind, req)) as ModelFindReply.AsObject
     const ret: EntityList<T> = {
-      entitiesList: res.entitiesList.map(entity => JSON.parse(fromBase64(entity as string))),
+      entitiesList: res.entitiesList.map(entity => JSON.parse(Buffer.from(entity as string, 'base64').toString())),
     }
     return ret
   }

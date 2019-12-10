@@ -79,7 +79,7 @@ describe('Client', function() {
       expect(start).to.be.undefined
     })
   })
-  describe('.createInvite', () => {
+  describe('.getStoreLink', () => {
     it('response should be defined and be an array of strings', async () => {
       const invites = await client.getStoreLink(store.id)
       expect(invites).to.not.be.undefined
