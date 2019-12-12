@@ -42,6 +42,58 @@ Or to do just Nodejs or browser:
 npm run test:{node,browser}
 ```
 
+## Basic use in Typescript
+
+**create a client**
+
+```js
+this.client = new Client('http://localhost:9091')
+```
+
+**create a store**
+
+```js
+const store = await this.client.newStore()
+await this.client.registerSchema(store.id, 'Folder2P', schema)
+```
+
+**join a store by invite**
+
+```js
+const store = await this.client.newStore()
+await this.client.registerSchema(store.id, 'Folder2P', schema)
+try {
+  const some = await this.client.startFromAddress(
+    store.id,
+    '/ip4/127.0.0.1/tcp/4006/p2p/12D3KooWS2QMPk53mi6xzjr6j87bB9NDfn6NnnQWFc31p86SwpBW/thread/bafktbzj3z4gc7x44dc7izjieurbboybszntx6vapj3umytpilvuqjva',
+    'stAhc51y6tnTdDGxSzA9rrSgjudzenwF6YcMAKK5Dm2seEmQi55DfGXcxzco',
+    'j6YMX423ugWRRTXsfeHCzRLgBTQ95H1u7r35MZ6mKYTN7rLgdRvq1Efb2PBL')
+} catch(err) {
+  console.log(err)
+}
+```
+
+**get all entries**
+
+```js
+const found = await this.client.modelFind(this.finderID, 'Folder2P', {})
+console.debug('found:', found.entitiesList.length)
+this.folders = found.entitiesList.map((entity) => entity).map((obj) => {
+  return new YourModel(obj)
+})
+```
+
+**add an entry**
+
+```js
+// matches YourModel and schema
+const created = await this.client.modelCreate(this.finderID, 'Folder2', [{
+  some: 'data',
+  numbers: [1, 2, 3]
+}])
+```
+
+
 ## React Native
 
 The following has been tested on **Android Only**.
