@@ -30,6 +30,8 @@ jobs:
       run: |
             cd ~ && mkdir gosrc && cd gosrc
             git clone https://github.com/textileio/go-textile-threads.git
+            cd go-textile-threads
+            go build threadsd/main.go
     - name: Test
       run: |
            (cd ~ && cd gosrc/go-textile-threads && go run threadsd/main.go) &
