@@ -33,7 +33,7 @@ jobs:
     - name: Test
       run: |
            (cd gosrc/go-textile-threads && go run threadsd/main.go) &
-           sleep 2
+           sleep 10
            mkdir -p allure-results
            npm run test:node
 
