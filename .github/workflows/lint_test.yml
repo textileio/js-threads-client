@@ -32,7 +32,7 @@ jobs:
             git clone https://github.com/textileio/go-textile-threads.git
     - name: Test
       run: |
-           (cd gosrc/go-textile-threads && go run threadsd/main.go) &
+           (cd ~ && cd gosrc/go-textile-threads && go run threadsd/main.go) &
            sleep 10
            mkdir -p allure-results
            npm run test:node
