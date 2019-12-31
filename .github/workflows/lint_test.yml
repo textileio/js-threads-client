@@ -11,7 +11,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     container:
-      image: textile/builder:latest
+      image: textile/builder:1.13.1
     steps:
     - uses: actions/checkout@v1
     - name: Install
@@ -21,7 +21,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      image: textile/builder:latest
+      image: textile/builder:1.13.1
     steps:
     - uses: actions/checkout@v1
     - name: Install
