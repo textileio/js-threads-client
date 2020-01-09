@@ -29,9 +29,15 @@ jobs:
             git clone https://github.com/textileio/go-textile-threads.git
             cd go-textile-threads
             go build threadsd/main.go
-    - name: Test
+    - name: Test Node
       run: |
            (cd ~ && cd gosrc/go-textile-threads && go run threadsd/main.go) &
+           sleep 10
+           mkdir -p allure-results
+           npm run test:node
+    - name: Test Browser
+      run: |
+           (cd ~ && cd gosrc/go-textile-threads && rm -rf .threads && go run threadsd/main.go) &
            sleep 10
            mkdir -p allure-results
            npm run test:node
