@@ -78,13 +78,13 @@ jobs:
             echo $(go version)
             mkdir -p ~/daemon && cd ~/daemon
             git clone --depth=1  https://github.com/textileio/go-threads.git
-            cd go-textile-threads
+            cd go-threads
             go mod download
             go build threadsd/main.go
 
     - name: Test Node
       run: |
-           (cd ~/daemon/go-textile-threads && go run threadsd/main.go) &
+           (cd ~/daemon/go-threads && go run threadsd/main.go) &
            sleep 10
            mkdir -p allure-results
            npm run test:node
