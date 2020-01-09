@@ -7,11 +7,14 @@ on:
 jobs:
   lint:
     name: Lint
-    runs-on: golang:1.13.4
+    runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'skip-ci')"
 
     steps:
-
+    - name: Set up Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
     - name: Checkout
       uses: actions/checkout@v1
 
@@ -42,7 +45,10 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'skip-ci')"
 
     steps:
-
+    - name: Set up Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
     - name: Checkout
       uses: actions/checkout@v1
 
