@@ -7,7 +7,7 @@ on:
 jobs:
   lint:
     name: Lint
-    runs-on: nimmis/golang
+    runs-on: textile/builder
     if: "!contains(github.event.head_commit.message, 'skip-ci')"
 
     steps:
