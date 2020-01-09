@@ -45,7 +45,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: Cache
+    - name: Cache Build
       uses: actions/cache@v1
       with:
         path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
@@ -54,6 +54,17 @@ jobs:
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
           ${{ runner.os }}-
+
+    - name: Cache Daemon
+      uses: actions/cache@v1
+      with:
+        path: ~/daemon # npm cache files are stored in `~/.npm` on Linux/macOS
+        key: ${{ runner.os }}-daemon-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
     - name: Setup
       uses: actions/setup-node@v1
       with:
@@ -64,21 +75,21 @@ jobs:
 
     - name: Install Daemon
       run: |
-            cd ~ && mkdir gosrc && cd gosrc
+            mkdir -p ~/daemon && cd ~/daemon
             git clone --depth=1  https://github.com/textileio/go-textile-threads.git
             cd go-textile-threads
             go build threadsd/main.go
 
     - name: Test Node
       run: |
-           (cd ~ && cd gosrc/go-textile-threads && go run threadsd/main.go) &
+           (cd ~/daemon/go-textile-threads && go run threadsd/main.go) &
            sleep 10
            mkdir -p allure-results
            npm run test:node
 
     - name: Test Browser
       run: |
-           (cd ~ && cd gosrc/go-textile-threads && rm -rf .threads && go run threadsd/main.go) &
+           (cd ~/daemon/go-textile-threads && rm -rf .threads && go run threadsd/main.go) &
            sleep 10
            mkdir -p allure-results
            npm run test:node
