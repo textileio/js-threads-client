@@ -57,12 +57,17 @@ jobs:
           ${{ runner.os }}-build-
           ${{ runner.os }}-
 
+    - name: Get Daemon
+      run: |
+            mkdir -p ~/daemon && cd ~/daemon
+            git clone --depth=1  https://github.com/textileio/go-threads.git
+
     - name: Cache Go Dependencies
       id: cache-dependencies
       uses: actions/cache@v1
       with:
         path: ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        key: ${{ runner.os }}-go-${{ hashFiles('~/daemon/go-threads/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-go-
 
@@ -74,12 +79,9 @@ jobs:
     - name: Install
       run: npm install
 
-    - name: Install Daemon
+    - name: Build threadsd
       run: |
-            echo $(go version)
-            mkdir -p ~/daemon && cd ~/daemon
-            git clone --depth=1  https://github.com/textileio/go-threads.git
-            cd go-threads
+            cd ~/daemon/go-threads
             go mod download
             go build threadsd/main.go
 
