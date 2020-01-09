@@ -94,5 +94,4 @@ jobs:
 
     - name: Test Browser
       run: |
-           sleep 10
            npm run test:browser
