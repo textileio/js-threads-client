@@ -75,6 +75,7 @@ jobs:
 
     - name: Install Daemon
       run: |
+            echo $(go version)
             mkdir -p ~/daemon && cd ~/daemon
             git clone --depth=1  https://github.com/textileio/go-textile-threads.git
             cd go-textile-threads
