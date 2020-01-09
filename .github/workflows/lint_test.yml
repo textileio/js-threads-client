@@ -91,7 +91,7 @@ jobs:
 
     - name: Test Browser
       run: |
-           (cd ~/daemon/go-textile-threads && rm -rf .threads && go run threadsd/main.go) &
+           (cd ~/daemon/go-threads && rm -rf .threads && go run threadsd/main.go) &
            sleep 10
            mkdir -p allure-results
            npm run test:node
