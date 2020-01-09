@@ -79,7 +79,7 @@ jobs:
     - name: Install
       run: npm install
 
-    - name: Build threadsd
+    - name: Build Daemon
       run: |
             cd ~/daemon/go-threads
             go mod download
