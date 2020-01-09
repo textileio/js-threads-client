@@ -78,6 +78,7 @@ jobs:
             mkdir -p ~/daemon && cd ~/daemon
             git clone --depth=1  https://github.com/textileio/go-textile-threads.git
             cd go-textile-threads
+            go mod download
             go build threadsd/main.go
 
     - name: Test Node
