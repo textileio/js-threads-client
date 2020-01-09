@@ -87,11 +87,11 @@ jobs:
 
     - name: Test Node
       run: |
+           (cd ~/daemon/go-threads && rm -rf .threads && go run threadsd/main.go) &
            mkdir -p allure-results
            npm run test:node
 
     - name: Test Browser
       run: |
-           (cd ~/daemon/go-threads && rm -rf .threads && go run threadsd/main.go) &
            sleep 10
-           npm run test:node
+           npm run test:browser
