@@ -7,7 +7,7 @@ on:
 jobs:
   lint:
     name: Lint
-    runs-on: circleci/golang:1.13-buster-node-browsers
+    runs-on: golang:1.13.4
     if: "!contains(github.event.head_commit.message, 'skip-ci')"
 
     steps:
@@ -37,6 +37,7 @@ jobs:
       
   test:
     name: Test
+    needs: lint
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'skip-ci')"
 
