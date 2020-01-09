@@ -1,44 +1,84 @@
 name: lint_test
-
 on:
   pull_request:
     branches:
       - master
+
 jobs:
   lint:
+    name: Lint
     runs-on: ubuntu-latest
-    container:
-      image: textile/builder:1.13.1
+    if: "!contains(github.event.head_commit.message, 'skip-ci')"
+
     steps:
-    - uses: actions/checkout@v1
+
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Cache
+      uses: actions/cache@v1
+      with:
+        path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+    - name: Setup
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+
     - name: Install
       run: npm install
+      
     - name: Lint
       run: npm run lint
+      
   test:
+    name: Test
     runs-on: ubuntu-latest
-    container:
-      image: textile/builder:1.13.1
+    if: "!contains(github.event.head_commit.message, 'skip-ci')"
+
     steps:
-    - uses: actions/checkout@v1
+
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Cache
+      uses: actions/cache@v1
+      with:
+        path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+    - name: Setup
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+
     - name: Install
       run: npm install
+
     - name: Install Daemon
       run: |
             cd ~ && mkdir gosrc && cd gosrc
-            git clone https://github.com/textileio/go-textile-threads.git
+            git clone --depth=1  https://github.com/textileio/go-textile-threads.git
             cd go-textile-threads
             go build threadsd/main.go
+
     - name: Test Node
       run: |
            (cd ~ && cd gosrc/go-textile-threads && go run threadsd/main.go) &
            sleep 10
            mkdir -p allure-results
            npm run test:node
+
     - name: Test Browser
       run: |
            (cd ~ && cd gosrc/go-textile-threads && rm -rf .threads && go run threadsd/main.go) &
            sleep 10
            mkdir -p allure-results
            npm run test:node
-
