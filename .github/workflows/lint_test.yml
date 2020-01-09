@@ -55,11 +55,11 @@ jobs:
           ${{ runner.os }}-build-
           ${{ runner.os }}-
 
-    - name: Cache Daemon
+    - name: Cache Go
       uses: actions/cache@v1
       with:
-        path: ~/daemon # npm cache files are stored in `~/.npm` on Linux/macOS
-        key: ${{ runner.os }}-daemon-${{ hashFiles('**/package-lock.json') }}
+        path: /go # npm cache files are stored in `~/.npm` on Linux/macOS
+        key: ${{ runner.os }}-go-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ env.cache-name }}-
           ${{ runner.os }}-build-
