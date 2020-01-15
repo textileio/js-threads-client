@@ -285,11 +285,11 @@ describe('Client', function() {
         expect(entity.age).to.be.greaterThan(21)
         events.push(entity.age)
       })
-      closer()
       existingPerson.age = 30
       await client.modelSave(store.id, 'Person', [existingPerson])
       existingPerson.age = 40
       await client.modelSave(store.id, 'Person', [existingPerson])
+      closer()
       while (events.length < 2) {
         await sleep(250) // simply wait for our events to fire
       }
