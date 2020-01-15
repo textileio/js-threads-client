@@ -289,10 +289,10 @@ describe('Client', function() {
       await client.modelSave(store.id, 'Person', [existingPerson])
       existingPerson.age = 40
       await client.modelSave(store.id, 'Person', [existingPerson])
-      closer()
       while (events.length < 2) {
         await sleep(250) // simply wait for our events to fire
       }
+      closer()
       expect(events.length).to.equal(2)
     }).timeout(25000) // Make sure our test doesn't timeout
   })
