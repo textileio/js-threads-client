@@ -269,7 +269,7 @@ export class Client {
   public readTransaction(storeID: string, modelName: string): ReadTransaction {
     var metadata = {'Authorization': 'Bearer 087e5814-b44a-4732-a15c-824bfacd4da7'};
     const client = grpc.client(API.ReadTransaction, {
-      host: this.host
+      host: this.host,
     }) as grpc.Client<ReadTransactionRequest, ReadTransactionReply>
     return new ReadTransaction(client, storeID, modelName)
   }
@@ -316,7 +316,7 @@ export class Client {
     const res = grpc.invoke(API.Listen, {
       host: this.host,
       request: req,
-      metadata:metadata,
+      metadata: metadata,
       onMessage: (rec: ListenReply) => {
         const ret: Entity<T> = {
           entity: JSON.parse(Buffer.from(rec.getEntity_asU8()).toString()),
