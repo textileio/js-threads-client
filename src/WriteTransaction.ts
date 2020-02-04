@@ -1,3 +1,4 @@
+import { grpc } from '@improbable-eng/grpc-web'
 import * as uuid from 'uuid'
 import {
   ModelCreateRequest,
@@ -28,7 +29,9 @@ export class WriteTransaction extends Transaction<WriteTransactionRequest, Write
     startReq.setModelname(this.modelName)
     const req = new WriteTransactionRequest()
     req.setStarttransactionrequest(startReq)
-    this.client.start()
+    var metadata = new grpc.Metadata()
+    metadata.set('Authorization', 'Bearer 087e5814-b44a-4732-a15c-824bfacd4da7')
+    this.client.start(metadata)
     this.client.send(req)
   }
   /**
