@@ -48,7 +48,7 @@ jobs:
         env:
           THRDS_APIPROXYADDR: /ip4/0.0.0.0/tcp/6007
         ports:
-          - "127.0.0.1:6107:6007"
+          - "127.0.0.1:6007:6007"
 
     steps:
     - name: Checkout
