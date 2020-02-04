@@ -312,9 +312,11 @@ export class Client {
       filter.setEntityid(entityID)
       req.addFilters(filter)
     }
+    var metadata = {'Authorization': 'Bearer 087e5814-b44a-4732-a15c-824bfacd4da7'};
     const res = grpc.invoke(API.Listen, {
       host: this.host,
       request: req,
+      metadata:metadata,
       onMessage: (rec: ListenReply) => {
         const ret: Entity<T> = {
           entity: JSON.parse(Buffer.from(rec.getEntity_asU8()).toString()),
@@ -328,16 +330,7 @@ export class Client {
         callback()
       },
     })
-<<<<<<< HEAD
     return res.close.bind(res)
-=======
-    var metadata = new grpc.Metadata()
-    metadata.set('Authorization', 'Bearer 087e5814-b44a-4732-a15c-824bfacd4da7')
-    client.start(metadata)
-    client.send(req)
-    // Bind to client here because the close call uses 'this'...
-    return client.close.bind(client)
->>>>>>> proof of concept for cloud auth
   }
 
   private async unary<
@@ -346,7 +339,6 @@ export class Client {
     M extends grpc.UnaryMethodDefinition<TRequest, TResponse>
   >(methodDescriptor: M, req: TRequest) {
     var metadata = {'Authorization': 'Bearer 087e5814-b44a-4732-a15c-824bfacd4da7'};
-    console.log(metadata)
     return new Promise((resolve, reject) => {
       grpc.unary(methodDescriptor, {
         request: req,
@@ -356,7 +348,6 @@ export class Client {
           const { status, statusMessage, message } = res
           if (status === grpc.Code.OK) {
             if (message) {
-              console.log(statusMessage)
               resolve(message.toObject())
             } else {
               resolve()
