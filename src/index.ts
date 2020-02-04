@@ -267,8 +267,9 @@ export class Client {
    * @param modelName The human-readable name of the model to use.
    */
   public readTransaction(storeID: string, modelName: string): ReadTransaction {
+    var metadata = {'Authorization': 'Bearer 087e5814-b44a-4732-a15c-824bfacd4da7'};
     const client = grpc.client(API.ReadTransaction, {
-      host: this.host,
+      host: this.host
     }) as grpc.Client<ReadTransactionRequest, ReadTransactionReply>
     return new ReadTransaction(client, storeID, modelName)
   }
@@ -327,7 +328,16 @@ export class Client {
         callback()
       },
     })
+<<<<<<< HEAD
     return res.close.bind(res)
+=======
+    var metadata = new grpc.Metadata()
+    metadata.set('Authorization', 'Bearer 087e5814-b44a-4732-a15c-824bfacd4da7')
+    client.start(metadata)
+    client.send(req)
+    // Bind to client here because the close call uses 'this'...
+    return client.close.bind(client)
+>>>>>>> proof of concept for cloud auth
   }
 
   private async unary<
@@ -335,14 +345,18 @@ export class Client {
     TResponse extends grpc.ProtobufMessage,
     M extends grpc.UnaryMethodDefinition<TRequest, TResponse>
   >(methodDescriptor: M, req: TRequest) {
+    var metadata = {'Authorization': 'Bearer 087e5814-b44a-4732-a15c-824bfacd4da7'};
+    console.log(metadata)
     return new Promise((resolve, reject) => {
       grpc.unary(methodDescriptor, {
         request: req,
         host: this.host,
+        metadata: metadata,
         onEnd: res => {
           const { status, statusMessage, message } = res
           if (status === grpc.Code.OK) {
             if (message) {
+              console.log(statusMessage)
               resolve(message.toObject())
             } else {
               resolve()
