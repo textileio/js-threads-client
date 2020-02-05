@@ -314,7 +314,7 @@ export class Client {
     const res = grpc.invoke(API.Listen, {
       host: this.config.host,
       request: req,
-      metadata: this.config.wrapMetadata(),
+      metadata: this.config._wrapMetadata(),
       onMessage: (rec: ListenReply) => {
         const ret: Entity<T> = {
           entity: JSON.parse(Buffer.from(rec.getEntity_asU8()).toString()),
@@ -340,7 +340,7 @@ export class Client {
       grpc.unary(methodDescriptor, {
         request: req,
         host: this.config.host,
-        metadata: this.config.wrapMetadata(),
+        metadata: this.config._wrapMetadata(),
         onEnd: res => {
           const { status, statusMessage, message } = res
           if (status === grpc.Code.OK) {

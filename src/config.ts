@@ -11,7 +11,7 @@ export class Config {
     this.transport = transport || grpc.WebsocketTransport()
   }
 
-  wrapMetadata(values?: { [key: string]: any }): { [key: string]: any } | undefined {
+  _wrapMetadata(values?: { [key: string]: any }): { [key: string]: any } | undefined {
     if (!this.session) {
       return values
     }
@@ -22,7 +22,7 @@ export class Config {
     response['Authorization'] = `Bearer ${this.session}`
     return response
   }
-  wrapBrowserHeaders(values: grpc.Metadata): grpc.Metadata {
+  _wrapBrowserHeaders(values: grpc.Metadata): grpc.Metadata {
     if (!this.session) {
       return values
     }

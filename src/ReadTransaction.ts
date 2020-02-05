@@ -34,7 +34,7 @@ export class ReadTransaction extends Transaction<ReadTransactionRequest, ReadTra
     startReq.setModelname(this.modelName)
     const req = new ReadTransactionRequest()
     req.setStarttransactionrequest(startReq)
-    const metadata = this.config.wrapBrowserHeaders(new grpc.Metadata())
+    const metadata = this.config._wrapBrowserHeaders(new grpc.Metadata())
     this.client.start(metadata)
     this.client.send(req)
   }
