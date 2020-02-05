@@ -11,11 +11,20 @@ import { toBase64, fromBase64 } from 'b64-lite'
 import { Transaction } from './Transaction'
 import { Entity, EntityList } from './models'
 import { JSONQuery } from './models'
+import { Config } from './config'
 
 /**
  * ReadTransaction performs a read-only bulk transaction on the underlying store.
  */
 export class ReadTransaction extends Transaction<ReadTransactionRequest, ReadTransactionReply> {
+  constructor(
+    protected readonly config: Config,
+    protected readonly client: grpc.Client<ReadTransactionRequest, ReadTransactionReply>,
+    protected readonly storeID: string,
+    protected readonly modelName: string,
+  ) {
+    super(client, storeID, modelName)
+  }
   /**
    * start begins the transaction. All operations between start and end will be applied as a single transaction upon a call to end.
    */
@@ -25,8 +34,7 @@ export class ReadTransaction extends Transaction<ReadTransactionRequest, ReadTra
     startReq.setModelname(this.modelName)
     const req = new ReadTransactionRequest()
     req.setStarttransactionrequest(startReq)
-    var metadata = new grpc.Metadata()
-    metadata.set('Authorization', 'Bearer 087e5814-b44a-4732-a15c-824bfacd4da7')
+    const metadata = this.config.wrapBrowserHeaders(new grpc.Metadata())
     this.client.start(metadata)
     this.client.send(req)
   }
