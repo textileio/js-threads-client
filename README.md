@@ -49,7 +49,7 @@ npm run test:{node,browser}
 ```js
 import { Client } from '@textile/threads-client'
 
-this.client = new Client('http://localhost:6007')
+this.client = new Client()
 ```
 
 **create a threads client using Textile APIs**
