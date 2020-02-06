@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { grpc } from '@improbable-eng/grpc-web'
 
+export type BaseConfig = {
+  host?: string
+  transport?: grpc.TransportFactory
+}
+
 export class Config {
   public host: string
   public transport: grpc.TransportFactory
