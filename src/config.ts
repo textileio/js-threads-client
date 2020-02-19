@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { grpc } from '@improbable-eng/grpc-web'
+import {NodeHttpTransport} from "@improbable-eng/grpc-web-node-http-transport";
 
 export interface BaseConfig {
   host?: string
@@ -9,7 +10,7 @@ export interface BaseConfig {
 export class Config {
   constructor(
     public host: string = 'http://127.0.0.1:6007',
-    public transport: grpc.TransportFactory = grpc.WebsocketTransport(),
+    public transport: grpc.TransportFactory = NodeHttpTransport(),
   ) {}
 
   _wrapMetadata(values?: { [key: string]: any }): { [key: string]: any } | undefined {

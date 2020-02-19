@@ -57,12 +57,14 @@
   "license": "MIT",
   "dependencies": {
     "@improbable-eng/grpc-web": "^0.12.0",
+    "@improbable-eng/grpc-web-node-http-transport": "^0.12.0",
     "@textile/threads-client-grpc": "^0.1.6",
     "@types/google-protobuf": "^3.7.2",
     "b64-lite": "^1.4.0",
     "bs58": "^4.0.1",
     "google-protobuf": "^3.10.0",
     "isomorphic-ws": "^4.0.1",
+    "node-fetch": "^2.6.0",
     "uuid": "^3.3.3",
     "ws": "^7.2.0"
   },
