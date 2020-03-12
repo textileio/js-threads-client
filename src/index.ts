@@ -155,12 +155,12 @@ export class Client {
   }
 
   /**
-   * modelCreate creates a new model instance in the given store.
+   * create creates a new model instance in the given store.
    * @param DBID The id of the store in which create the new instance.
    * @param modelName The human-readable name of the model to use.
    * @param values An array of model instances as JSON/JS objects.
    */
-  public async modelCreate<T = any>(DBID: string, modelName: string, values: any[]) {
+  public async create<T = any>(DBID: string, modelName: string, values: any[]) {
     const req = new CreateRequest()
     req.setDbid(DBID)
     req.setCollectionname(modelName)
@@ -178,12 +178,12 @@ export class Client {
   }
 
   /**
-   * modelSave saves changes to an existing model instance in the given store.
+   * save saves changes to an existing model instance in the given store.
    * @param DBID The id of the store in which the existing instance will be saved.
    * @param modelName The human-readable name of the model to use.
    * @param values An array of model instances as JSON/JS objects. Each model instance must have a valid existing `ID` property.
    */
-  public async modelSave(DBID: string, modelName: string, values: any[]) {
+  public async save(DBID: string, modelName: string, values: any[]) {
     const req = new SaveRequest()
     req.setDbid(DBID)
     req.setCollectionname(modelName)
@@ -200,42 +200,42 @@ export class Client {
   }
 
   /**
-   * modelDelete deletes an existing model instance from the given store.
+   * delete deletes an existing model instance from the given store.
    * @param DBID The id of the store from which to remove the given instances.
    * @param modelName The human-readable name of the model to use.
-   * @param instanceIDs An array of instance ids to delete.
+   * @param IDs An array of instance ids to delete.
    */
-  public async modelDelete(DBID: string, modelName: string, instanceIDs: string[]) {
+  public async delete(DBID: string, modelName: string, IDs: string[]) {
     const req = new DeleteRequest()
     req.setDbid(DBID)
     req.setCollectionname(modelName)
-    req.setInstanceidsList(instanceIDs)
+    req.setInstanceidsList(IDs)
     await this.unary(API.Delete, req)
     return
   }
 
   /**
-   * modelHas checks whether a given instance exists in the given store.
+   * has checks whether a given instance exists in the given store.
    * @param DBID The id of the store in which to check inclusion.
    * @param modelName The human-readable name of the model to use.
-   * @param instanceIDs An array of instance ids to check for.
+   * @param IDs An array of instance ids to check for.
    */
-  public async modelHas(DBID: string, modelName: string, instanceIDs: string[]) {
+  public async has(DBID: string, modelName: string, IDs: string[]) {
     const req = new HasRequest()
     req.setDbid(DBID)
     req.setCollectionname(modelName)
-    req.setInstanceidsList(instanceIDs)
+    req.setInstanceidsList(IDs)
     const res = (await this.unary(API.Has, req)) as HasReply.AsObject
     return res.exists
   }
 
   /**
-   * instanceFind queries the store for entities matching the given query parameters. See Query for options.
+   * find queries the store for entities matching the given query parameters. See Query for options.
    * @param DBID The id of the store on which to perform the query.
    * @param modelName The human-readable name of the model to use.
    * @param query The object that describes the query. See Query for options. Alternatively, see JSONQuery for the basic interface.
    */
-  public async instanceFind<T = any>(DBID: string, modelName: string, query: JSONQuery) {
+  public async find<T = any>(DBID: string, modelName: string, query: JSONQuery) {
     const req = new FindRequest()
     req.setDbid(DBID)
     req.setCollectionname(modelName)
@@ -251,16 +251,16 @@ export class Client {
   }
 
   /**
-   * instanceFindByID queries the store for the id of an instance.
+   * findByID queries the store for the id of an instance.
    * @param DBID The id of the store on which to perform the query.
    * @param modelName The human-readable name of the model to use.
-   * @param instanceID The id of the instance to search for.
+   * @param ID The id of the instance to search for.
    */
-  public async instanceFindByID<T = any>(DBID: string, modelName: string, instanceID: string) {
+  public async findByID<T = any>(DBID: string, modelName: string, ID: string) {
     const req = new FindByIDRequest()
     req.setDbid(DBID)
     req.setCollectionname(modelName)
-    req.setInstanceid(instanceID)
+    req.setInstanceid(ID)
     const res = (await this.unary(API.FindByID, req)) as FindByIDReply.AsObject
     const ret: Instance<T> = {
       instance: JSON.parse(res.instance as string),
@@ -297,13 +297,13 @@ export class Client {
    * The return value is a `close` function, which cleanly closes the connection with the remote node.
    * @param DBID The id of the store on which to open the connection.
    * @param modelName The human-readable name of the model to use.
-   * @param instanceID The id of the instance to monitor.
+   * @param ID The id of the instance to monitor.
    * @param callback The callback to call on each update to the given instance.
    */
   public listen<T = any>(
     DBID: string,
     modelName: string,
-    instanceID: string,
+    ID: string,
     callback: (reply?: Instance<T>, err?: Error) => void,
   ) {
     const req = new ListenRequest()
@@ -313,9 +313,9 @@ export class Client {
       filter.setCollectionname(modelName)
       req.addFilters(filter)
     }
-    if (instanceID && instanceID !== '') {
+    if (ID && ID !== '') {
       const filter = new ListenRequest.Filter()
-      filter.setInstanceid(instanceID)
+      filter.setInstanceid(ID)
       req.addFilters(filter)
     }
     const res = grpc.invoke(API.Listen, {

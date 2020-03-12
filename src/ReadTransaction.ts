@@ -41,12 +41,12 @@ export class ReadTransaction extends Transaction<ReadTransactionRequest, ReadTra
 
   /**
    * has checks whether a given instance exists in the given store.
-   * @param instanceIDs An array of instance ids to check for.
+   * @param IDs An array of instance ids to check for.
    */
-  public async has(instanceIDs: string[]) {
+  public async has(IDs: string[]) {
     return new Promise<boolean>((resolve, reject) => {
       const hasReq = new HasRequest()
-      hasReq.setInstanceidsList(instanceIDs)
+      hasReq.setInstanceidsList(IDs)
       const req = new ReadTransactionRequest()
       req.setHasrequest(hasReq)
       this.client.onMessage((message: ReadTransactionReply) => {
@@ -59,10 +59,10 @@ export class ReadTransaction extends Transaction<ReadTransactionRequest, ReadTra
   }
 
   /**
-   * instanceFind queries the store for entities matching the given query parameters. See Query for options.
+   * find queries the store for entities matching the given query parameters. See Query for options.
    * @param query The object that describes the query. See Query for options. Alternatively, see JSONQuery for the basic interface.
    */
-  public async instanceFind<T = any>(query: JSONQuery) {
+  public async find<T = any>(query: JSONQuery) {
     return new Promise<InstanceList<T>>((resolve, reject) => {
       const findReq = new FindRequest()
       findReq.setQueryjson(toBase64(JSON.stringify(query)))
@@ -85,13 +85,13 @@ export class ReadTransaction extends Transaction<ReadTransactionRequest, ReadTra
   }
 
   /**
-   * instanceFindByID queries the store for the id of an instance.
-   * @param instanceID The id of the instance to search for.
+   * findByID queries the store for the id of an instance.
+   * @param ID The id of the instance to search for.
    */
-  public async instanceFindByID<T = any>(instanceID: string) {
+  public async findByID<T = any>(ID: string) {
     return new Promise<Instance<T>>((resolve, reject) => {
       const findReq = new FindByIDRequest()
-      findReq.setInstanceid(instanceID)
+      findReq.setInstanceid(ID)
       const req = new ReadTransactionRequest()
       req.setFindbyidrequest(findReq)
       this.client.onMessage((message: ReadTransactionReply) => {

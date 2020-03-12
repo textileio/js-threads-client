@@ -42,10 +42,10 @@ export class WriteTransaction extends Transaction<WriteTransactionRequest, Write
     this.client.send(req)
   }
   /**
-   * modelCreate creates a new model instance in the given store.
+   * create creates a new model instance in the given store.
    * @param values An array of model instances as JSON/JS objects.
    */
-  public async modelCreate<T = any>(values: any[]) {
+  public async create<T = any>(values: any[]) {
     return new Promise<InstanceList<T> | undefined>((resolve, reject) => {
       const createReq = new CreateRequest()
       const list: any[] = []
@@ -73,10 +73,10 @@ export class WriteTransaction extends Transaction<WriteTransactionRequest, Write
   }
 
   /**
-   * modelSave saves changes to an existing model instance in the given store.
+   * save saves changes to an existing model instance in the given store.
    * @param values An array of model instances as JSON/JS objects. Each model instance must have a valid existing `ID` property.
    */
-  public async modelSave(values: any[]) {
+  public async save(values: any[]) {
     return new Promise<void>((resolve, reject) => {
       const saveReq = new SaveRequest()
       const list: any[] = []
@@ -98,13 +98,13 @@ export class WriteTransaction extends Transaction<WriteTransactionRequest, Write
   }
 
   /**
-   * modelDelete deletes an existing model instance from the given store.
-   * @param instanceIDs An array of instance ids to delete.
+   * delete deletes an existing model instance from the given store.
+   * @param IDs An array of instance ids to delete.
    */
-  public async modelDelete(instanceIDs: string[]) {
+  public async delete(IDs: string[]) {
     return new Promise<void>((resolve, reject) => {
       const deleteReq = new DeleteRequest()
-      deleteReq.setInstanceidsList(instanceIDs)
+      deleteReq.setInstanceidsList(IDs)
       const req = new WriteTransactionRequest()
       req.setDeleterequest(deleteReq)
       this.client.onMessage((_message: WriteTransactionReply) => {
@@ -116,12 +116,12 @@ export class WriteTransaction extends Transaction<WriteTransactionRequest, Write
   }
   /**
    * has checks whether a given instance exists in the given store.
-   * @param instanceIDs An array of instance ids to check for.
+   * @param IDs An array of instance ids to check for.
    */
-  public async has(instanceIDs: string[]) {
+  public async has(IDs: string[]) {
     return new Promise<boolean>((resolve, reject) => {
       const hasReq = new HasRequest()
-      hasReq.setInstanceidsList(instanceIDs)
+      hasReq.setInstanceidsList(IDs)
       const req = new WriteTransactionRequest()
       req.setHasrequest(hasReq)
       this.client.onMessage((message: WriteTransactionReply) => {
@@ -133,10 +133,10 @@ export class WriteTransaction extends Transaction<WriteTransactionRequest, Write
     })
   }
   /**
-   * instanceFind queries the store for entities matching the given query parameters. See Query for options.
+   * find queries the store for entities matching the given query parameters. See Query for options.
    * @param query The object that describes the query. See Query for options. Alternatively, see JSONQuery for the basic interface.
    */
-  public async instanceFind<T = any>(query: JSONQuery) {
+  public async find<T = any>(query: JSONQuery) {
     return new Promise<InstanceList<T>>((resolve, reject) => {
       const findReq = new FindRequest()
       findReq.setQueryjson(toBase64(JSON.stringify(query)))
@@ -159,13 +159,13 @@ export class WriteTransaction extends Transaction<WriteTransactionRequest, Write
   }
 
   /**
-   * instanceFindByID queries the store for the id of an instance.
-   * @param instanceID The id of the instance to search for.
+   * findByID queries the store for the id of an instance.
+   * @param ID The id of the instance to search for.
    */
-  public async instanceFindByID<T = any>(instanceID: string) {
+  public async findByID<T = any>(ID: string) {
     return new Promise<Instance<T> | undefined>((resolve, reject) => {
       const findReq = new FindByIDRequest()
-      findReq.setInstanceid(instanceID)
+      findReq.setInstanceid(ID)
       const req = new WriteTransactionRequest()
       req.setFindbyidrequest(findReq)
       this.client.onMessage((message: WriteTransactionReply) => {

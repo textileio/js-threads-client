@@ -80,7 +80,7 @@ try {
 **get all instances**
 
 ```js
-const found = await client.instanceFind(this.finderID, 'Folder2P', {})
+const found = await client.find(this.finderID, 'Folder2P', {})
 console.debug('found:', found.instancesList.length)
 this.folders = found.instancesList.map((instance) => instance).map((obj) => {
   return new YourModel(obj)
