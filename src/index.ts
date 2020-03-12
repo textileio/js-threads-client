@@ -3,44 +3,45 @@ import * as uuid from 'uuid'
 import { grpc } from '@improbable-eng/grpc-web'
 import { API } from '@textile/threads-client-grpc/api_pb_service'
 import {
-  NewStoreRequest,
-  NewStoreReply,
-  RegisterSchemaRequest,
+  NewDBRequest,
+  NewDBReply,
+  NewCollectionReply,
+  NewCollectionRequest,
   StartRequest,
   StartFromAddressRequest,
-  ModelCreateRequest,
-  ModelCreateReply,
-  ModelSaveRequest,
-  ModelDeleteRequest,
-  ModelHasRequest,
-  ModelHasReply,
-  ModelFindRequest,
-  ModelFindReply,
-  ModelFindByIDRequest,
-  ModelFindByIDReply,
+  CreateRequest,
+  CreateReply,
+  SaveRequest,
+  DeleteRequest,
+  HasRequest,
+  HasReply,
+  FindRequest,
+  FindReply,
+  FindByIDRequest,
+  FindByIDReply,
   ReadTransactionRequest,
   ReadTransactionReply,
   WriteTransactionRequest,
   WriteTransactionReply,
   ListenRequest,
   ListenReply,
-  GetStoreLinkRequest,
-  GetStoreLinkReply,
+  GetDBLinkRequest,
+  GetDBLinkReply,
 } from '@textile/threads-client-grpc/api_pb'
 import { encode, decode } from 'bs58'
 import * as pack from '../package.json'
 import { ReadTransaction } from './ReadTransaction'
 import { WriteTransaction } from './WriteTransaction'
 import { Config, BaseConfig } from './config'
-import { JSONQuery, Entity, EntityList } from './models'
+import { JSONQuery, Instance, InstanceList } from './models'
 
-export { BaseConfig, Config, Entity, EntityList, JSONQuery }
+export { BaseConfig, Config, Instance, InstanceList, JSONQuery }
 export { Query, Where } from './query'
 
 /**
  * Client is a web-gRPC wrapper client for communicating with a webgRPC-enabled Textile server.
  * This client library can be used to interact with a local or remote Textile gRPC-service
- *  It is a wrapper around Textile's 'Store' API, which is defined here: https://github.com/textileio/go-threads/blob/master/api/pb/api.proto.
+ *  It is a wrapper around Textile's 'DB' API, which is defined here: https://github.com/textileio/go-threads/blob/master/api/pb/api.proto.
  */
 export class Client {
   /**
@@ -70,25 +71,25 @@ export class Client {
   }
 
   /**
-   * newStore creates a new store on the remote node.
+   * newDB creates a new store on the remote node.
    */
-  public async newStore() {
-    return this.unary(API.NewStore, new NewStoreRequest()) as Promise<NewStoreReply.AsObject>
+  public async newDB() {
+    return this.unary(API.NewDB, new NewDBRequest()) as Promise<NewDBReply.AsObject>
   }
 
   /**
-   * registerSchema registers a new model schema under the given name on the remote node.
+   * newCollection registers a new model schema under the given name on the remote node.
    * The schema must be a valid json-schema.org schema, and can be a JSON string or Javascript object.
-   * @param storeID The id of the store with which to register the new model.
+   * @param DBID The id of the store with which to register the new model.
    * @param name The human-readable name for the model.
    * @param schema The actual json-schema.org compatible schema object.
    */
-  public async registerSchema(storeID: string, name: string, schema: any) {
-    const req = new RegisterSchemaRequest()
-    req.setStoreid(storeID)
+  public async newCollection(DBID: string, name: string, schema: any) {
+    const req = new NewCollectionRequest()
+    req.setDbid(DBID)
     req.setName(name)
     req.setSchema(JSON.stringify(schema))
-    await this.unary(API.RegisterSchema, req)
+    await this.unary(API.NewCollection, req)
     return
   }
 
@@ -96,11 +97,11 @@ export class Client {
    * start initializes the client with the given store.
    * It should be called immediatelly after registering all schemas and before any operation on
    * the store.
-   * @param storeID The id of the store with which to register.
+   * @param DBID The id of the store with which to register.
    */
-  public async start(storeID: string) {
+  public async start(DBID: string) {
     const req = new StartRequest()
-    req.setStoreid(storeID)
+    req.setDbid(DBID)
     await this.unary(API.Start, req)
     return
   }
@@ -110,21 +111,21 @@ export class Client {
    * thread address (database). It should be called before any operation on the store, and is an
    * alternative to start, which creates a local store. startFromAddress should also include the
    * read and follow keys, which should be Buffer, Uint8Array or base58-encoded strings.
-   * See `getStoreLink` for a possible source of the address and keys.
-   * @param storeID The id of the store with which to register.
+   * See `getDBLink` for a possible source of the address and keys.
+   * @param DBID The id of the store with which to register.
    * @param address The address for the thread with which to connect.
    * Should be of the form /ip4/<url/ip-address>/tcp/<port>/p2p/<peer-id>/thread/<thread-id>
    * @param followKey Symmetric key. Uint8Array or base58-encoded string of length 44 bytes.
    * @param readKey Symmetric key. Uint8Array or base58-encoded string of length 44 bytes.
    */
   public async startFromAddress(
-    storeID: string,
+    DBID: string,
     address: string,
     followKey: string | Uint8Array,
     readKey: string | Uint8Array,
   ) {
     const req = new StartFromAddressRequest()
-    req.setStoreid(storeID)
+    req.setDbid(DBID)
     req.setAddress(address)
     req.setFollowkey(typeof followKey === 'string' ? decode(followKey) : followKey)
     req.setReadkey(typeof readKey === 'string' ? decode(readKey) : readKey)
@@ -133,13 +134,13 @@ export class Client {
   }
 
   /**
-   * getStoreLink returns invite 'links' unseful for inviting other peers to join a given store/thread.
-   * @param storeID The id of the store for which to create the invite.
+   * getDBLink returns invite 'links' unseful for inviting other peers to join a given store/thread.
+   * @param DBID The id of the store for which to create the invite.
    */
-  public async getStoreLink(storeID: string) {
-    const req = new GetStoreLinkRequest()
-    req.setStoreid(storeID)
-    const res = (await this.unary(API.GetStoreLink, req)) as GetStoreLinkReply.AsObject
+  public async getDBLink(DBID: string) {
+    const req = new GetDBLinkRequest()
+    req.setDbid(DBID)
+    const res = (await this.unary(API.GetDBLink, req)) as GetDBLinkReply.AsObject
     const invites: Array<{ address: string; followKey: string; readKey: string }> = []
     for (const addr of res.addressesList) {
       const fk = Buffer.from(res.followkey as string, 'base64')
@@ -155,37 +156,37 @@ export class Client {
 
   /**
    * modelCreate creates a new model instance in the given store.
-   * @param storeID The id of the store in which create the new instance.
+   * @param DBID The id of the store in which create the new instance.
    * @param modelName The human-readable name of the model to use.
    * @param values An array of model instances as JSON/JS objects.
    */
-  public async modelCreate<T = any>(storeID: string, modelName: string, values: any[]) {
-    const req = new ModelCreateRequest()
-    req.setStoreid(storeID)
-    req.setModelname(modelName)
+  public async modelCreate<T = any>(DBID: string, modelName: string, values: any[]) {
+    const req = new CreateRequest()
+    req.setDbid(DBID)
+    req.setCollectionname(modelName)
     const list: any[] = []
     values.forEach(v => {
       v['ID'] = uuid.v4()
       list.push(JSON.stringify(v))
     })
     req.setValuesList(list)
-    const res = (await this.unary(API.ModelCreate, req)) as ModelCreateReply.AsObject
-    const ret: EntityList<T> = {
-      entitiesList: res.entitiesList.map(entity => JSON.parse(entity as string)),
+    const res = (await this.unary(API.Create, req)) as CreateReply.AsObject
+    const ret: InstanceList<T> = {
+      instancesList: res.instancesList.map(instance => JSON.parse(instance as string)),
     }
     return ret
   }
 
   /**
    * modelSave saves changes to an existing model instance in the given store.
-   * @param storeID The id of the store in which the existing instance will be saved.
+   * @param DBID The id of the store in which the existing instance will be saved.
    * @param modelName The human-readable name of the model to use.
    * @param values An array of model instances as JSON/JS objects. Each model instance must have a valid existing `ID` property.
    */
-  public async modelSave(storeID: string, modelName: string, values: any[]) {
-    const req = new ModelSaveRequest()
-    req.setStoreid(storeID)
-    req.setModelname(modelName)
+  public async modelSave(DBID: string, modelName: string, values: any[]) {
+    const req = new SaveRequest()
+    req.setDbid(DBID)
+    req.setCollectionname(modelName)
     const list: any[] = []
     values.forEach(v => {
       if (!v.hasOwnProperty('ID')) {
@@ -194,125 +195,127 @@ export class Client {
       list.push(JSON.stringify(v))
     })
     req.setValuesList(list)
-    await this.unary(API.ModelSave, req)
+    await this.unary(API.Save, req)
     return
   }
 
   /**
    * modelDelete deletes an existing model instance from the given store.
-   * @param storeID The id of the store from which to remove the given instances.
+   * @param DBID The id of the store from which to remove the given instances.
    * @param modelName The human-readable name of the model to use.
-   * @param entityIDs An array of entity ids to delete.
+   * @param instanceIDs An array of instance ids to delete.
    */
-  public async modelDelete(storeID: string, modelName: string, entityIDs: string[]) {
-    const req = new ModelDeleteRequest()
-    req.setStoreid(storeID)
-    req.setModelname(modelName)
-    req.setEntityidsList(entityIDs)
-    await this.unary(API.ModelDelete, req)
+  public async modelDelete(DBID: string, modelName: string, instanceIDs: string[]) {
+    const req = new DeleteRequest()
+    req.setDbid(DBID)
+    req.setCollectionname(modelName)
+    req.setInstanceidsList(instanceIDs)
+    await this.unary(API.Delete, req)
     return
   }
 
   /**
-   * modelHas checks whether a given entity exists in the given store.
-   * @param storeID The id of the store in which to check inclusion.
+   * modelHas checks whether a given instance exists in the given store.
+   * @param DBID The id of the store in which to check inclusion.
    * @param modelName The human-readable name of the model to use.
-   * @param entityIDs An array of entity ids to check for.
+   * @param instanceIDs An array of instance ids to check for.
    */
-  public async modelHas(storeID: string, modelName: string, entityIDs: string[]) {
-    const req = new ModelHasRequest()
-    req.setStoreid(storeID)
-    req.setModelname(modelName)
-    req.setEntityidsList(entityIDs)
-    const res = (await this.unary(API.ModelHas, req)) as ModelHasReply.AsObject
+  public async modelHas(DBID: string, modelName: string, instanceIDs: string[]) {
+    const req = new HasRequest()
+    req.setDbid(DBID)
+    req.setCollectionname(modelName)
+    req.setInstanceidsList(instanceIDs)
+    const res = (await this.unary(API.Has, req)) as HasReply.AsObject
     return res.exists
   }
 
   /**
-   * modelFind queries the store for entities matching the given query parameters. See Query for options.
-   * @param storeID The id of the store on which to perform the query.
+   * instanceFind queries the store for entities matching the given query parameters. See Query for options.
+   * @param DBID The id of the store on which to perform the query.
    * @param modelName The human-readable name of the model to use.
    * @param query The object that describes the query. See Query for options. Alternatively, see JSONQuery for the basic interface.
    */
-  public async modelFind<T = any>(storeID: string, modelName: string, query: JSONQuery) {
-    const req = new ModelFindRequest()
-    req.setStoreid(storeID)
-    req.setModelname(modelName)
+  public async instanceFind<T = any>(DBID: string, modelName: string, query: JSONQuery) {
+    const req = new FindRequest()
+    req.setDbid(DBID)
+    req.setCollectionname(modelName)
     // @todo: Find a more isomorphic way to do this base64 round-trip
     req.setQueryjson(Buffer.from(JSON.stringify(query)).toString('base64'))
-    const res = (await this.unary(API.ModelFind, req)) as ModelFindReply.AsObject
-    const ret: EntityList<T> = {
-      entitiesList: res.entitiesList.map(entity => JSON.parse(Buffer.from(entity as string, 'base64').toString())),
+    const res = (await this.unary(API.Find, req)) as FindReply.AsObject
+    const ret: InstanceList<T> = {
+      instancesList: res.instancesList.map(instance =>
+        JSON.parse(Buffer.from(instance as string, 'base64').toString()),
+      ),
     }
     return ret
   }
 
   /**
-   * modelFindByID queries the store for the id of an entity.
-   * @param storeID The id of the store on which to perform the query.
+   * instanceFindByID queries the store for the id of an instance.
+   * @param DBID The id of the store on which to perform the query.
    * @param modelName The human-readable name of the model to use.
-   * @param entityID The id of the entity to search for.
+   * @param instanceID The id of the instance to search for.
    */
-  public async modelFindByID<T = any>(storeID: string, modelName: string, entityID: string) {
-    const req = new ModelFindByIDRequest()
-    req.setStoreid(storeID)
-    req.setModelname(modelName)
-    req.setEntityid(entityID)
-    const res = (await this.unary(API.ModelFindByID, req)) as ModelFindByIDReply.AsObject
-    const ret: Entity<T> = {
-      entity: JSON.parse(res.entity as string),
+  public async instanceFindByID<T = any>(DBID: string, modelName: string, instanceID: string) {
+    const req = new FindByIDRequest()
+    req.setDbid(DBID)
+    req.setCollectionname(modelName)
+    req.setInstanceid(instanceID)
+    const res = (await this.unary(API.FindByID, req)) as FindByIDReply.AsObject
+    const ret: Instance<T> = {
+      instance: JSON.parse(res.instance as string),
     }
     return ret
   }
 
   /**
    * readTransaction creates a new read-only transaction object. See ReadTransaction for details.
-   * @param storeID The id of the store on which to perform the transaction.
+   * @param DBID The id of the store on which to perform the transaction.
    * @param modelName The human-readable name of the model to use.
    */
-  public readTransaction(storeID: string, modelName: string): ReadTransaction {
+  public readTransaction(DBID: string, modelName: string): ReadTransaction {
     const client = grpc.client(API.ReadTransaction, {
       host: this.config.host,
     }) as grpc.Client<ReadTransactionRequest, ReadTransactionReply>
-    return new ReadTransaction(this.config, client, storeID, modelName)
+    return new ReadTransaction(this.config, client, DBID, modelName)
   }
 
   /**
    * writeTransaction creates a new writeable transaction object. See WriteTransaction for details.
-   * @param storeID The id of the store on which to perform the transaction.
+   * @param DBID The id of the store on which to perform the transaction.
    * @param modelName The human-readable name of the model to use.
    */
-  public writeTransaction(storeID: string, modelName: string): WriteTransaction {
+  public writeTransaction(DBID: string, modelName: string): WriteTransaction {
     const client = grpc.client(API.WriteTransaction, {
       host: this.config.host,
     }) as grpc.Client<WriteTransactionRequest, WriteTransactionReply>
-    return new WriteTransaction(this.config, client, storeID, modelName)
+    return new WriteTransaction(this.config, client, DBID, modelName)
   }
 
   /**
-   * listen opens a long-lived connection with a remote node, running the given callback on each new update to the given entity.
+   * listen opens a long-lived connection with a remote node, running the given callback on each new update to the given instance.
    * The return value is a `close` function, which cleanly closes the connection with the remote node.
-   * @param storeID The id of the store on which to open the connection.
+   * @param DBID The id of the store on which to open the connection.
    * @param modelName The human-readable name of the model to use.
-   * @param entityID The id of the entity to monitor.
-   * @param callback The callback to call on each update to the given entity.
+   * @param instanceID The id of the instance to monitor.
+   * @param callback The callback to call on each update to the given instance.
    */
   public listen<T = any>(
-    storeID: string,
+    DBID: string,
     modelName: string,
-    entityID: string,
-    callback: (reply?: Entity<T>, err?: Error) => void,
+    instanceID: string,
+    callback: (reply?: Instance<T>, err?: Error) => void,
   ) {
     const req = new ListenRequest()
-    req.setStoreid(storeID)
+    req.setDbid(DBID)
     if (modelName && modelName !== '') {
       const filter = new ListenRequest.Filter()
-      filter.setModelname(modelName)
+      filter.setCollectionname(modelName)
       req.addFilters(filter)
     }
-    if (entityID && entityID !== '') {
+    if (instanceID && instanceID !== '') {
       const filter = new ListenRequest.Filter()
-      filter.setEntityid(entityID)
+      filter.setInstanceid(instanceID)
       req.addFilters(filter)
     }
     const res = grpc.invoke(API.Listen, {
@@ -320,8 +323,8 @@ export class Client {
       request: req,
       metadata: this.config._wrapMetadata(),
       onMessage: (rec: ListenReply) => {
-        const ret: Entity<T> = {
-          entity: JSON.parse(Buffer.from(rec.getEntity_asU8()).toString()),
+        const ret: Instance<T> = {
+          instance: JSON.parse(Buffer.from(rec.getInstance_asU8()).toString()),
         }
         callback(ret)
       },
