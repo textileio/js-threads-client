@@ -152,13 +152,13 @@ export class Client {
   /**
    * create creates a new model instance in the given store.
    * @param DBID The id of the store in which create the new instance.
-   * @param modelName The human-readable name of the model to use.
+   * @param collectionName The human-readable name of the model to use.
    * @param values An array of model instances as JSON/JS objects.
    */
-  public async create<T = any>(DBID: string, modelName: string, values: any[]) {
+  public async create<T = any>(DBID: string, collectionName: string, values: any[]) {
     const req = new CreateRequest()
     req.setDbid(DBID)
-    req.setCollectionname(modelName)
+    req.setCollectionname(collectionName)
     const list: any[] = []
     values.forEach(v => {
       v['ID'] = uuid.v4()
@@ -175,13 +175,13 @@ export class Client {
   /**
    * save saves changes to an existing model instance in the given store.
    * @param DBID The id of the store in which the existing instance will be saved.
-   * @param modelName The human-readable name of the model to use.
+   * @param collectionName The human-readable name of the model to use.
    * @param values An array of model instances as JSON/JS objects. Each model instance must have a valid existing `ID` property.
    */
-  public async save(DBID: string, modelName: string, values: any[]) {
+  public async save(DBID: string, collectionName: string, values: any[]) {
     const req = new SaveRequest()
     req.setDbid(DBID)
-    req.setCollectionname(modelName)
+    req.setCollectionname(collectionName)
     const list: any[] = []
     values.forEach(v => {
       if (!v.hasOwnProperty('ID')) {
@@ -197,13 +197,13 @@ export class Client {
   /**
    * delete deletes an existing model instance from the given store.
    * @param DBID The id of the store from which to remove the given instances.
-   * @param modelName The human-readable name of the model to use.
+   * @param collectionName The human-readable name of the model to use.
    * @param IDs An array of instance ids to delete.
    */
-  public async delete(DBID: string, modelName: string, IDs: string[]) {
+  public async delete(DBID: string, collectionName: string, IDs: string[]) {
     const req = new DeleteRequest()
     req.setDbid(DBID)
-    req.setCollectionname(modelName)
+    req.setCollectionname(collectionName)
     req.setInstanceidsList(IDs)
     await this.unary(API.Delete, req)
     return
@@ -212,13 +212,13 @@ export class Client {
   /**
    * has checks whether a given instance exists in the given store.
    * @param DBID The id of the store in which to check inclusion.
-   * @param modelName The human-readable name of the model to use.
+   * @param collectionName The human-readable name of the model to use.
    * @param IDs An array of instance ids to check for.
    */
-  public async has(DBID: string, modelName: string, IDs: string[]) {
+  public async has(DBID: string, collectionName: string, IDs: string[]) {
     const req = new HasRequest()
     req.setDbid(DBID)
-    req.setCollectionname(modelName)
+    req.setCollectionname(collectionName)
     req.setInstanceidsList(IDs)
     const res = (await this.unary(API.Has, req)) as HasReply.AsObject
     return res.exists
@@ -227,13 +227,13 @@ export class Client {
   /**
    * find queries the store for entities matching the given query parameters. See Query for options.
    * @param DBID The id of the store on which to perform the query.
-   * @param modelName The human-readable name of the model to use.
+   * @param collectionName The human-readable name of the model to use.
    * @param query The object that describes the query. See Query for options. Alternatively, see JSONQuery for the basic interface.
    */
-  public async find<T = any>(DBID: string, modelName: string, query: JSONQuery) {
+  public async find<T = any>(DBID: string, collectionName: string, query: JSONQuery) {
     const req = new FindRequest()
     req.setDbid(DBID)
-    req.setCollectionname(modelName)
+    req.setCollectionname(collectionName)
     // @todo: Find a more isomorphic way to do this base64 round-trip
     req.setQueryjson(Buffer.from(JSON.stringify(query)).toString('base64'))
     const res = (await this.unary(API.Find, req)) as FindReply.AsObject
@@ -248,13 +248,13 @@ export class Client {
   /**
    * findByID queries the store for the id of an instance.
    * @param DBID The id of the store on which to perform the query.
-   * @param modelName The human-readable name of the model to use.
+   * @param collectionName The human-readable name of the model to use.
    * @param ID The id of the instance to search for.
    */
-  public async findByID<T = any>(DBID: string, modelName: string, ID: string) {
+  public async findByID<T = any>(DBID: string, collectionName: string, ID: string) {
     const req = new FindByIDRequest()
     req.setDbid(DBID)
-    req.setCollectionname(modelName)
+    req.setCollectionname(collectionName)
     req.setInstanceid(ID)
     const res = (await this.unary(API.FindByID, req)) as FindByIDReply.AsObject
     const ret: Instance<T> = {
@@ -266,46 +266,46 @@ export class Client {
   /**
    * readTransaction creates a new read-only transaction object. See ReadTransaction for details.
    * @param DBID The id of the store on which to perform the transaction.
-   * @param modelName The human-readable name of the model to use.
+   * @param collectionName The human-readable name of the model to use.
    */
-  public readTransaction(DBID: string, modelName: string): ReadTransaction {
+  public readTransaction(DBID: string, collectionName: string): ReadTransaction {
     const client = grpc.client(API.ReadTransaction, {
       host: this.config.host,
     }) as grpc.Client<ReadTransactionRequest, ReadTransactionReply>
-    return new ReadTransaction(this.config, client, DBID, modelName)
+    return new ReadTransaction(this.config, client, DBID, collectionName)
   }
 
   /**
    * writeTransaction creates a new writeable transaction object. See WriteTransaction for details.
    * @param DBID The id of the store on which to perform the transaction.
-   * @param modelName The human-readable name of the model to use.
+   * @param collectionName The human-readable name of the model to use.
    */
-  public writeTransaction(DBID: string, modelName: string): WriteTransaction {
+  public writeTransaction(DBID: string, collectionName: string): WriteTransaction {
     const client = grpc.client(API.WriteTransaction, {
       host: this.config.host,
     }) as grpc.Client<WriteTransactionRequest, WriteTransactionReply>
-    return new WriteTransaction(this.config, client, DBID, modelName)
+    return new WriteTransaction(this.config, client, DBID, collectionName)
   }
 
   /**
    * listen opens a long-lived connection with a remote node, running the given callback on each new update to the given instance.
    * The return value is a `close` function, which cleanly closes the connection with the remote node.
    * @param DBID The id of the store on which to open the connection.
-   * @param modelName The human-readable name of the model to use.
+   * @param collectionName The human-readable name of the model to use.
    * @param ID The id of the instance to monitor.
    * @param callback The callback to call on each update to the given instance.
    */
   public listen<T = any>(
     DBID: string,
-    modelName: string,
+    collectionName: string,
     ID: string,
     callback: (reply?: Instance<T>, err?: Error) => void,
   ) {
     const req = new ListenRequest()
     req.setDbid(DBID)
-    if (modelName && modelName !== '') {
+    if (collectionName && collectionName !== '') {
       const filter = new ListenRequest.Filter()
-      filter.setCollectionname(modelName)
+      filter.setCollectionname(collectionName)
       req.addFilters(filter)
     }
     if (ID && ID !== '') {
