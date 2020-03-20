@@ -107,8 +107,8 @@ export class Client {
    * @param DBID The id of the store with which to register.
    * @param address The address for the thread with which to connect.
    * Should be of the form /ip4/<url/ip-address>/tcp/<port>/p2p/<peer-id>/thread/<thread-id>
-   * @param followKey Symmetric key. Uint8Array or base58-encoded string of length 44 bytes.
-   * @param readKey Symmetric key. Uint8Array or base58-encoded string of length 44 bytes.
+   * @param DBKey The DBKey provided through an invite or from getDBInfo.
+   * @param collections An array of Name and JSON Schemas for collections in the DB.
    */
   public async newDBFromAddr(
     address: string,
