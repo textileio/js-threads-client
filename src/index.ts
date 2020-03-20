@@ -5,10 +5,10 @@ import { API } from '@textile/threads-client-grpc/api_pb_service'
 import {
   NewDBRequest,
   NewDBReply,
+  NewDBFromAddrRequest,
   NewCollectionReply,
   NewCollectionRequest,
-  StartRequest,
-  StartFromAddressRequest,
+  CollectionConfig,
   CreateRequest,
   CreateReply,
   SaveRequest,
@@ -25,8 +25,8 @@ import {
   WriteTransactionReply,
   ListenRequest,
   ListenReply,
-  GetDBLinkRequest,
-  GetDBLinkReply,
+  GetDBInfoRequest,
+  GetDBInfoReply,
 } from '@textile/threads-client-grpc/api_pb'
 import { encode, decode } from 'bs58'
 import * as pack from '../package.json'
@@ -73,8 +73,11 @@ export class Client {
   /**
    * newDB creates a new store on the remote node.
    */
-  public async newDB() {
-    return this.unary(API.NewDB, new NewDBRequest()) as Promise<NewDBReply.AsObject>
+  public async newDB(DBID: string) {
+    const req = new NewDBRequest()
+    req.setDbid(DBID)
+    await this.unary(API.NewDB, req)
+    return
   }
 
   /**
@@ -86,23 +89,12 @@ export class Client {
    */
   public async newCollection(DBID: string, name: string, schema: any) {
     const req = new NewCollectionRequest()
+    const config = new CollectionConfig()
+    config.setName(name)
+    config.setSchema(JSON.stringify(schema))
     req.setDbid(DBID)
-    req.setName(name)
-    req.setSchema(JSON.stringify(schema))
+    req.setConfig(config)
     await this.unary(API.NewCollection, req)
-    return
-  }
-
-  /**
-   * start initializes the client with the given store.
-   * It should be called immediatelly after registering all schemas and before any operation on
-   * the store.
-   * @param DBID The id of the store with which to register.
-   */
-  public async start(DBID: string) {
-    const req = new StartRequest()
-    req.setDbid(DBID)
-    await this.unary(API.Start, req)
     return
   }
 
@@ -111,44 +103,47 @@ export class Client {
    * thread address (database). It should be called before any operation on the store, and is an
    * alternative to start, which creates a local store. startFromAddress should also include the
    * read and follow keys, which should be Buffer, Uint8Array or base58-encoded strings.
-   * See `getDBLink` for a possible source of the address and keys.
+   * See `getDBInfo` for a possible source of the address and keys.
    * @param DBID The id of the store with which to register.
    * @param address The address for the thread with which to connect.
    * Should be of the form /ip4/<url/ip-address>/tcp/<port>/p2p/<peer-id>/thread/<thread-id>
    * @param followKey Symmetric key. Uint8Array or base58-encoded string of length 44 bytes.
    * @param readKey Symmetric key. Uint8Array or base58-encoded string of length 44 bytes.
    */
-  public async startFromAddress(
-    DBID: string,
+  public async newDBFromAddr(
     address: string,
-    followKey: string | Uint8Array,
-    readKey: string | Uint8Array,
+    DBKey: string | Uint8Array,
+    collections: Array<{ name: string; schema: any }>,
   ) {
-    const req = new StartFromAddressRequest()
-    req.setDbid(DBID)
-    req.setAddress(address)
-    req.setFollowkey(typeof followKey === 'string' ? decode(followKey) : followKey)
-    req.setReadkey(typeof readKey === 'string' ? decode(readKey) : readKey)
-    await this.unary(API.StartFromAddress, req)
+    const req = new NewDBFromAddrRequest()
+    req.setDbaddr(address)
+    req.setDbkey(typeof DBKey === 'string' ? decode(DBKey) : DBKey)
+    req.setCollectionsList(
+      collections.map(c => {
+        const config = new CollectionConfig()
+        config.setName(c.name)
+        config.setSchema(JSON.stringify(c.schema))
+        return config
+      }),
+    )
+    await this.unary(API.NewDBFromAddr, req)
     return
   }
 
   /**
-   * getDBLink returns invite 'links' unseful for inviting other peers to join a given store/thread.
+   * getDBInfo returns invite 'links' unseful for inviting other peers to join a given store/thread.
    * @param DBID The id of the store for which to create the invite.
    */
-  public async getDBLink(DBID: string) {
-    const req = new GetDBLinkRequest()
+  public async getDBInfo(DBID: string) {
+    const req = new GetDBInfoRequest()
     req.setDbid(DBID)
-    const res = (await this.unary(API.GetDBLink, req)) as GetDBLinkReply.AsObject
-    const invites: Array<{ address: string; followKey: string; readKey: string }> = []
+    const res = (await this.unary(API.GetDBInfo, req)) as GetDBInfoReply.AsObject
+    const invites: Array<{ address: string; key: string }> = []
     for (const addr of res.addressesList) {
-      const fk = Buffer.from(res.followkey as string, 'base64')
-      const rk = Buffer.from(res.readkey as string, 'base64')
+      const dk = Buffer.from(res.dbkey as string, 'base64')
       invites.push({
         address: addr,
-        followKey: encode(fk),
-        readKey: encode(rk),
+        key: encode(dk),
       })
     }
     return invites
