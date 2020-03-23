@@ -18,20 +18,20 @@ WriteTransaction performs a mutating bulk transaction on the underlying store.
 
 ### Methods
 
+* [create](writetransaction.md#create)
+* [delete](writetransaction.md#delete)
 * [end](writetransaction.md#end)
+* [find](writetransaction.md#find)
+* [findByID](writetransaction.md#findbyid)
 * [has](writetransaction.md#has)
-* [modelCreate](writetransaction.md#modelcreate)
-* [modelDelete](writetransaction.md#modeldelete)
-* [modelFind](writetransaction.md#modelfind)
-* [modelFindByID](writetransaction.md#modelfindbyid)
-* [modelSave](writetransaction.md#modelsave)
+* [save](writetransaction.md#save)
 * [start](writetransaction.md#start)
 
 ## Constructors
 
 ###  constructor
 
-\+ **new WriteTransaction**(`config`: [Config](config.md), `client`: Client‹WriteTransactionRequest, WriteTransactionReply›, `storeID`: string, `modelName`: string): *[WriteTransaction](writetransaction.md)*
+\+ **new WriteTransaction**(`config`: [Config](config.md), `client`: Client‹WriteTransactionRequest, WriteTransactionReply›, `DBID`: string, `modelName`: string): *[WriteTransaction](writetransaction.md)*
 
 *Overrides [Transaction](transaction.md).[constructor](transaction.md#constructor)*
 
@@ -43,12 +43,52 @@ Name | Type |
 ------ | ------ |
 `config` | [Config](config.md) |
 `client` | Client‹WriteTransactionRequest, WriteTransactionReply› |
-`storeID` | string |
+`DBID` | string |
 `modelName` | string |
 
 **Returns:** *[WriteTransaction](writetransaction.md)*
 
 ## Methods
+
+###  create
+
+▸ **create**<**T**>(`values`: any[]): *Promise‹undefined | [InstanceList](../interfaces/instancelist.md)‹T››*
+
+*Defined in [src/WriteTransaction.ts:48](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L48)*
+
+create creates a new model instance in the given store.
+
+**Type parameters:**
+
+▪ **T**
+
+**Parameters:**
+
+Name | Type | Description |
+------ | ------ | ------ |
+`values` | any[] | An array of model instances as JSON/JS objects.  |
+
+**Returns:** *Promise‹undefined | [InstanceList](../interfaces/instancelist.md)‹T››*
+
+___
+
+###  delete
+
+▸ **delete**(`IDs`: string[]): *Promise‹void›*
+
+*Defined in [src/WriteTransaction.ts:104](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L104)*
+
+delete deletes an existing model instance from the given store.
+
+**Parameters:**
+
+Name | Type | Description |
+------ | ------ | ------ |
+`IDs` | string[] | An array of instance ids to delete.  |
+
+**Returns:** *Promise‹void›*
+
+___
 
 ###  end
 
@@ -64,71 +104,13 @@ end completes (flushes) the transaction. All operations between start and end wi
 
 ___
 
-###  has
+###  find
 
-▸ **has**(`entityIDs`: string[]): *Promise‹boolean›*
-
-*Defined in [src/WriteTransaction.ts:121](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L121)*
-
-has checks whether a given entity exists in the given store.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`entityIDs` | string[] | An array of entity ids to check for.  |
-
-**Returns:** *Promise‹boolean›*
-
-___
-
-###  modelCreate
-
-▸ **modelCreate**<**T**>(`values`: any[]): *Promise‹undefined | [EntityList](../interfaces/entitylist.md)‹T››*
-
-*Defined in [src/WriteTransaction.ts:48](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L48)*
-
-modelCreate creates a new model instance in the given store.
-
-**Type parameters:**
-
-▪ **T**
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`values` | any[] | An array of model instances as JSON/JS objects.  |
-
-**Returns:** *Promise‹undefined | [EntityList](../interfaces/entitylist.md)‹T››*
-
-___
-
-###  modelDelete
-
-▸ **modelDelete**(`entityIDs`: string[]): *Promise‹void›*
-
-*Defined in [src/WriteTransaction.ts:104](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L104)*
-
-modelDelete deletes an existing model instance from the given store.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`entityIDs` | string[] | An array of entity ids to delete.  |
-
-**Returns:** *Promise‹void›*
-
-___
-
-###  modelFind
-
-▸ **modelFind**<**T**>(`query`: [JSONQuery](../interfaces/jsonquery.md)): *Promise‹[EntityList](../interfaces/entitylist.md)‹T››*
+▸ **find**<**T**>(`query`: [JSONQuery](../interfaces/jsonquery.md)): *Promise‹[InstanceList](../interfaces/instancelist.md)‹T››*
 
 *Defined in [src/WriteTransaction.ts:139](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L139)*
 
-modelFind queries the store for entities matching the given query parameters. See Query for options.
+find queries the store for entities matching the given query parameters. See Query for options.
 
 **Type parameters:**
 
@@ -140,17 +122,17 @@ Name | Type | Description |
 ------ | ------ | ------ |
 `query` | [JSONQuery](../interfaces/jsonquery.md) | The object that describes the query. See Query for options. Alternatively, see JSONQuery for the basic interface.  |
 
-**Returns:** *Promise‹[EntityList](../interfaces/entitylist.md)‹T››*
+**Returns:** *Promise‹[InstanceList](../interfaces/instancelist.md)‹T››*
 
 ___
 
-###  modelFindByID
+###  findByID
 
-▸ **modelFindByID**<**T**>(`entityID`: string): *Promise‹undefined | [Entity](../interfaces/entity.md)‹T››*
+▸ **findByID**<**T**>(`ID`: string): *Promise‹undefined | [Instance](../interfaces/instance.md)‹T››*
 
 *Defined in [src/WriteTransaction.ts:165](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L165)*
 
-modelFindByID queries the store for the id of an entity.
+findByID queries the store for the id of an instance.
 
 **Type parameters:**
 
@@ -160,19 +142,37 @@ modelFindByID queries the store for the id of an entity.
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`entityID` | string | The id of the entity to search for.  |
+`ID` | string | The id of the instance to search for.  |
 
-**Returns:** *Promise‹undefined | [Entity](../interfaces/entity.md)‹T››*
+**Returns:** *Promise‹undefined | [Instance](../interfaces/instance.md)‹T››*
 
 ___
 
-###  modelSave
+###  has
 
-▸ **modelSave**(`values`: any[]): *Promise‹void›*
+▸ **has**(`IDs`: string[]): *Promise‹boolean›*
+
+*Defined in [src/WriteTransaction.ts:121](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L121)*
+
+has checks whether a given instance exists in the given store.
+
+**Parameters:**
+
+Name | Type | Description |
+------ | ------ | ------ |
+`IDs` | string[] | An array of instance ids to check for.  |
+
+**Returns:** *Promise‹boolean›*
+
+___
+
+###  save
+
+▸ **save**(`values`: any[]): *Promise‹void›*
 
 *Defined in [src/WriteTransaction.ts:79](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L79)*
 
-modelSave saves changes to an existing model instance in the given store.
+save saves changes to an existing model instance in the given store.
 
 **Parameters:**
 

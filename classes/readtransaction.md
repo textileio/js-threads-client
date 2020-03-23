@@ -19,16 +19,16 @@ ReadTransaction performs a read-only bulk transaction on the underlying store.
 ### Methods
 
 * [end](readtransaction.md#end)
+* [find](readtransaction.md#find)
+* [findByID](readtransaction.md#findbyid)
 * [has](readtransaction.md#has)
-* [modelFind](readtransaction.md#modelfind)
-* [modelFindByID](readtransaction.md#modelfindbyid)
 * [start](readtransaction.md#start)
 
 ## Constructors
 
 ###  constructor
 
-\+ **new ReadTransaction**(`config`: [Config](config.md), `client`: Client‹ReadTransactionRequest, ReadTransactionReply›, `storeID`: string, `modelName`: string): *[ReadTransaction](readtransaction.md)*
+\+ **new ReadTransaction**(`config`: [Config](config.md), `client`: Client‹ReadTransactionRequest, ReadTransactionReply›, `DBID`: string, `modelName`: string): *[ReadTransaction](readtransaction.md)*
 
 *Overrides [Transaction](transaction.md).[constructor](transaction.md#constructor)*
 
@@ -40,7 +40,7 @@ Name | Type |
 ------ | ------ |
 `config` | [Config](config.md) |
 `client` | Client‹ReadTransactionRequest, ReadTransactionReply› |
-`storeID` | string |
+`DBID` | string |
 `modelName` | string |
 
 **Returns:** *[ReadTransaction](readtransaction.md)*
@@ -61,31 +61,13 @@ end completes (flushes) the transaction. All operations between start and end wi
 
 ___
 
-###  has
+###  find
 
-▸ **has**(`entityIDs`: string[]): *Promise‹boolean›*
-
-*Defined in [src/ReadTransaction.ts:46](https://github.com/textileio/js-threads-client/blob/master/src/ReadTransaction.ts#L46)*
-
-has checks whether a given entity exists in the given store.
-
-**Parameters:**
-
-Name | Type | Description |
------- | ------ | ------ |
-`entityIDs` | string[] | An array of entity ids to check for.  |
-
-**Returns:** *Promise‹boolean›*
-
-___
-
-###  modelFind
-
-▸ **modelFind**<**T**>(`query`: [JSONQuery](../interfaces/jsonquery.md)): *Promise‹[EntityList](../interfaces/entitylist.md)‹T››*
+▸ **find**<**T**>(`query`: [JSONQuery](../interfaces/jsonquery.md)): *Promise‹[InstanceList](../interfaces/instancelist.md)‹T››*
 
 *Defined in [src/ReadTransaction.ts:65](https://github.com/textileio/js-threads-client/blob/master/src/ReadTransaction.ts#L65)*
 
-modelFind queries the store for entities matching the given query parameters. See Query for options.
+find queries the store for entities matching the given query parameters. See Query for options.
 
 **Type parameters:**
 
@@ -97,17 +79,17 @@ Name | Type | Description |
 ------ | ------ | ------ |
 `query` | [JSONQuery](../interfaces/jsonquery.md) | The object that describes the query. See Query for options. Alternatively, see JSONQuery for the basic interface.  |
 
-**Returns:** *Promise‹[EntityList](../interfaces/entitylist.md)‹T››*
+**Returns:** *Promise‹[InstanceList](../interfaces/instancelist.md)‹T››*
 
 ___
 
-###  modelFindByID
+###  findByID
 
-▸ **modelFindByID**<**T**>(`entityID`: string): *Promise‹[Entity](../interfaces/entity.md)‹T››*
+▸ **findByID**<**T**>(`ID`: string): *Promise‹[Instance](../interfaces/instance.md)‹T››*
 
 *Defined in [src/ReadTransaction.ts:91](https://github.com/textileio/js-threads-client/blob/master/src/ReadTransaction.ts#L91)*
 
-modelFindByID queries the store for the id of an entity.
+findByID queries the store for the id of an instance.
 
 **Type parameters:**
 
@@ -117,9 +99,27 @@ modelFindByID queries the store for the id of an entity.
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`entityID` | string | The id of the entity to search for.  |
+`ID` | string | The id of the instance to search for.  |
 
-**Returns:** *Promise‹[Entity](../interfaces/entity.md)‹T››*
+**Returns:** *Promise‹[Instance](../interfaces/instance.md)‹T››*
+
+___
+
+###  has
+
+▸ **has**(`IDs`: string[]): *Promise‹boolean›*
+
+*Defined in [src/ReadTransaction.ts:46](https://github.com/textileio/js-threads-client/blob/master/src/ReadTransaction.ts#L46)*
+
+has checks whether a given instance exists in the given store.
+
+**Parameters:**
+
+Name | Type | Description |
+------ | ------ | ------ |
+`IDs` | string[] | An array of instance ids to check for.  |
+
+**Returns:** *Promise‹boolean›*
 
 ___
 

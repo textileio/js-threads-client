@@ -21,8 +21,8 @@
 ### Interfaces
 
 * [BaseConfig](interfaces/baseconfig.md)
-* [Entity](interfaces/entity.md)
-* [EntityList](interfaces/entitylist.md)
+* [Instance](interfaces/instance.md)
+* [InstanceList](interfaces/instancelist.md)
 * [JSONCriterion](interfaces/jsoncriterion.md)
 * [JSONQuery](interfaces/jsonquery.md)
 * [JSONSort](interfaces/jsonsort.md)

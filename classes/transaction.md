@@ -32,7 +32,7 @@ Transaction represents a bulk transaction on a store.
 
 ###  constructor
 
-\+ **new Transaction**(`client`: Client‹TRequest, TResponse›, `storeID`: string, `modelName`: string): *[Transaction](transaction.md)*
+\+ **new Transaction**(`client`: Client‹TRequest, TResponse›, `DBID`: string, `modelName`: string): *[Transaction](transaction.md)*
 
 *Defined in [src/Transaction.ts:6](https://github.com/textileio/js-threads-client/blob/master/src/Transaction.ts#L6)*
 
@@ -43,7 +43,7 @@ Transaction creates a new transaction for the given store using the given model.
 Name | Type | Description |
 ------ | ------ | ------ |
 `client` | Client‹TRequest, TResponse› | The gRPC client to use for the transaction. |
-`storeID` | string | The id of the store on which to run the transaction. |
+`DBID` | string | The id of the store on which to run the transaction. |
 `modelName` | string | The human-readable name for the model.  |
 
 **Returns:** *[Transaction](transaction.md)*
