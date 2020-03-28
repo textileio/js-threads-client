@@ -8,7 +8,7 @@ import { expect } from 'chai'
 import { ReadTransaction } from 'src/ReadTransaction'
 import { WriteTransaction } from 'src/WriteTransaction'
 import { Client, ThreadID } from '../index'
-import { JSONQuery, JSONOperation } from '../models'
+import { JSONQuery, JSONOperation, Creds } from '../models'
 import { Where } from '../query'
 
 const client = new Client()
@@ -57,96 +57,92 @@ const createPerson = (): Person => {
 }
 
 describe('Client', function() {
-  const threadId = ThreadID.fromRandom()
-  const dbID = threadId.stringOfBase('base32')
+  const creds = Creds.defaultWithRandomID()
   let dbKey: string
+  let dbAddr: string
   describe('.newDB', () => {
     it('response should succeed', async () => {
-      await client.newDB(dbID)
+      await client.newDB(creds)
     })
   })
   describe('.newCollection', () => {
     it('response should be defined and be an empty object', async () => {
-      const register = await client.newCollection(dbID, 'Person', personSchema)
+      const register = await client.newCollection(creds, 'Person', personSchema)
       expect(register).to.be.undefined
     })
   })
   describe('.getDBInfo', () => {
     it('response should be defined and be an array of strings', async () => {
-      const invites = await client.getDBInfo(dbID)
+      const invites = await client.getDBInfo(creds)
       expect(invites).to.not.be.undefined
       expect(invites[0].address).to.not.be.undefined
       expect(invites[0].key).to.not.be.undefined
       dbKey = invites[0].key
+      dbAddr = invites[0].address
       expect(invites).to.not.be.empty
     })
   })
 
   describe.skip('.newDBFromAddr', () => {
     it('response should be defined and be an empty object', async () => {
-      const start = await client.newDBFromAddr(dbID, dbKey, [{ name: 'Person', schema: personSchema }])
+      const start = await client.newDBFromAddr(creds, dbKey, dbAddr, [{ name: 'Person', schema: personSchema }])
       expect(start).to.be.undefined
     })
   })
   describe('.create', () => {
     it('response should contain a JSON parsable instancesList', async () => {
-      const create = await client.create<Person>(dbID, 'Person', [createPerson()])
-      expect(create).to.not.be.undefined
-      expect(create).to.haveOwnProperty('instancesList')
-      const entities = create.instancesList
-      expect(entities).to.have.nested.property('[0].firstName', 'Adam')
-      expect(entities).to.have.nested.property('[0].lastName', 'Doe')
-      expect(entities).to.have.nested.property('[0].age', 21)
-      expect(entities).to.have.nested.property('[0].ID')
+      const entities = await client.create<Person>(creds, 'Person', [createPerson()])
+      expect(entities.length).to.equal(1)
     })
   })
   describe('.save', () => {
     it('response should be defined and be an empty object', async () => {
-      const create = await client.create<Person>(dbID, 'Person', [createPerson()])
-      const entities = create.instancesList
-      const person = entities.pop()
+      const person = createPerson()
+      const entities = await client.create<Person>(creds, 'Person', [person])
+      expect(entities.length).to.equal(1)
+      person.ID = entities[0]
       person!.age = 30
-      const save = await client.save(dbID, 'Person', [person])
+      const save = await client.save(creds, 'Person', [person])
       expect(save).to.be.undefined
     })
   })
   describe('.delete', () => {
     it('response should be defined and be an empty object', async () => {
-      const create = await client.create<Person>(dbID, 'Person', [createPerson()])
-      const entities = create.instancesList
-      const person = entities.pop()
-      const deleted = await client.delete(dbID, 'Person', [person!.ID])
+      const entities = await client.create<Person>(creds, 'Person', [createPerson()])
+      expect(entities.length).to.equal(1)
+      const personID = entities[0]
+      const deleted = await client.delete(creds, 'Person', [personID])
       expect(deleted).to.be.undefined
     })
   })
   describe('.has', () => {
     it('response be an object with property "exists" equal to true', async () => {
-      const create = await client.create(dbID, 'Person', [createPerson()])
-      const entities = create.instancesList
+      const entities = await client.create(creds, 'Person', [createPerson()])
       // Here we 'test' a different approach where we didn't use generics above to create the instance...
-      const person: Person = entities.pop()
-      const has = await client.has(dbID, 'Person', [person.ID])
+      expect(entities.length).to.equal(1)
+      const personID = entities[0]
+      const has = await client.has(creds, 'Person', [personID])
       expect(has).to.be.true
     })
   })
   describe('.find', () => {
-    it('', async () => {
+    it('response should contain the same entity based on query', async () => {
       const frank = createPerson()
       frank.firstName = 'Frank'
-      const create = await client.create<Person>(dbID, 'Person', [frank])
-      const entities = create.instancesList
-      const person = entities.pop()!
+      const entities = await client.create<Person>(creds, 'Person', [frank])
+      expect(entities.length).to.equal(1)
+      const personID = entities[0]
 
       const q: JSONQuery = {
         ands: [
           {
             fieldPath: 'firstName',
             operation: JSONOperation.Eq,
-            value: { string: person.firstName },
+            value: { string: frank.firstName },
           },
         ],
       }
-      const find = await client.find<Person>(dbID, 'Person', q)
+      const find = await client.find<Person>(creds, 'Person', q)
       expect(find).to.not.be.undefined
       const found = find.instancesList
       expect(found).to.have.length(1)
@@ -156,14 +152,14 @@ describe('Client', function() {
       expect(foundPerson).to.have.property('lastName', 'Doe')
       expect(foundPerson).to.have.property('age', 21)
       expect(foundPerson).to.have.property('ID')
+      expect(foundPerson['ID']).to.equal(personID)
     })
   })
   describe('.findById', () => {
     it('response should contain a JSON parsable instance property', async () => {
-      const create = await client.create(dbID, 'Person', [createPerson()])
-      const entities = create.instancesList
-      const person = entities.pop()!
-      const find = await client.findByID<Person>(dbID, 'Person', person.ID)
+      const entities = await client.create(creds, 'Person', [createPerson()])
+      const personID = entities.pop()!
+      const find = await client.findByID<Person>(creds, 'Person', personID)
       expect(find).to.not.be.undefined
       expect(find).to.haveOwnProperty('instance')
       const instance = find.instance
@@ -175,24 +171,23 @@ describe('Client', function() {
     })
   })
   describe('.readTransaction', () => {
-    let existingPerson: Person
+    let existingPersonID: string
     let transaction: ReadTransaction | undefined
     before(async () => {
-      const create = await client.create<Person>(dbID, 'Person', [createPerson()])
-      const entities = create.instancesList
-      existingPerson = entities.pop()!
-      transaction = client.readTransaction(dbID, 'Person')
+      const entities = await client.create<Person>(creds, 'Person', [createPerson()])
+      existingPersonID = entities.pop()!
+      transaction = client.readTransaction(creds, 'Person')
     })
     it('should start a transaction', async () => {
       expect(transaction).to.not.be.undefined
       await transaction!.start()
     })
     it('should able to check for an existing instance', async () => {
-      const has = await transaction!.has([existingPerson.ID])
+      const has = await transaction!.has([existingPersonID])
       expect(has).to.be.true
     })
     it('should be able to find an existing instance', async () => {
-      const find = await transaction!.findByID<Person>(existingPerson.ID)
+      const find = await transaction!.findByID<Person>(existingPersonID)
       expect(find).to.not.be.undefined
       expect(find).to.haveOwnProperty('instance')
       const instance = find!.instance
@@ -201,20 +196,21 @@ describe('Client', function() {
       expect(instance).to.have.property('lastName', 'Doe')
       expect(instance).to.have.property('age', 21)
       expect(instance).to.have.property('ID')
-      expect(instance).to.deep.equal(existingPerson)
+      expect(instance['ID']).to.deep.equal(existingPersonID)
     })
     it('should be able to close/end an transaction', async () => {
       await transaction!.end()
     })
   })
   describe('.writeTransaction', () => {
-    let existingPerson: Person
+    const person = createPerson()
+    let existingPersonID: string
     let transaction: WriteTransaction | undefined
     before(async () => {
-      const create = await client.create(dbID, 'Person', [createPerson()])
-      const entities = create.instancesList
-      existingPerson = entities.pop()
-      transaction = client.writeTransaction(dbID, 'Person')
+      const entities = await client.create(creds, 'Person', [person])
+      existingPersonID = entities.length ? entities[0] : ''
+      person['ID'] = existingPersonID
+      transaction = client.writeTransaction(creds, 'Person')
     })
     it('should start a transaction', async () => {
       expect(transaction).to.not.be.undefined
@@ -222,21 +218,16 @@ describe('Client', function() {
     })
     it('should be able to create an instance', async () => {
       const newPerson = createPerson()
-      const created = await transaction!.create<Person>([newPerson])
-      expect(created).to.not.be.undefined
-      expect(created).to.haveOwnProperty('instancesList')
-      const entities = created!.instancesList
-      expect(entities).to.have.nested.property('[0].firstName', 'Adam')
-      expect(entities).to.have.nested.property('[0].lastName', 'Doe')
-      expect(entities).to.have.nested.property('[0].age', 21)
-      expect(entities).to.have.nested.property('[0].ID')
+      const entities = await transaction!.create<Person>([newPerson])
+      expect(entities).to.not.be.undefined
+      expect(entities!.length).to.equal(1)
     })
     it('should able to check for an existing instance', async () => {
-      const has = await transaction!.has([existingPerson.ID])
+      const has = await transaction!.has([existingPersonID])
       expect(has).to.be.true
     })
     it('should be able to find an existing instance', async () => {
-      const find = await transaction!.findByID<Person>(existingPerson.ID)
+      const find = await transaction!.findByID<Person>(existingPersonID)
       expect(find).to.not.be.undefined
       expect(find).to.haveOwnProperty('instance')
       const instance = find!.instance
@@ -245,13 +236,13 @@ describe('Client', function() {
       expect(instance).to.have.property('lastName', 'Doe')
       expect(instance).to.have.property('age', 21)
       expect(instance).to.have.property('ID')
-      expect(instance).to.deep.equal(existingPerson)
+      expect(instance['ID']).to.deep.equal(existingPersonID)
     })
     it('should be able to save an existing instance', async () => {
-      existingPerson.age = 99
-      const saved = await transaction!.save([existingPerson])
+      person.age = 99
+      const saved = await transaction!.save([person])
       expect(saved).to.be.undefined
-      const deleted = await transaction!.delete([existingPerson.ID])
+      const deleted = await transaction!.delete([person.ID])
       expect(deleted).to.be.undefined
     })
     it('should be able to close/end an transaction', async () => {
@@ -259,15 +250,16 @@ describe('Client', function() {
     })
   })
   describe('.listen', () => {
-    let existingPerson: Person
+    const person = createPerson()
+    let existingPersonID: string
     const events: number[] = []
     before(async () => {
-      const create = await client.create<Person>(dbID, 'Person', [createPerson()])
-      const entities = create.instancesList
-      existingPerson = entities.pop()!
+      const entities = await client.create<Person>(creds, 'Person', [person])
+      existingPersonID = entities.length ? entities[0] : ''
+      person['ID'] = existingPersonID
     })
     it('should stream responses.', done => {
-      const close = client.listen<Person>(dbID, 'Person', existingPerson.ID, (reply, err) => {
+      const close = client.listen<Person>(creds, 'Person', existingPersonID, (reply, err) => {
         const instance = reply?.instance
         expect(instance).to.not.be.undefined
         expect(instance).to.have.property('age')
@@ -281,10 +273,10 @@ describe('Client', function() {
           throw err
         }
       })
-      existingPerson.age = 30
-      client.save(dbID, 'Person', [existingPerson]).then(() => {
-        existingPerson.age = 40
-        return client.save(dbID, 'Person', [existingPerson])
+      person.age = 30
+      client.save(creds, 'Person', [person]).then(() => {
+        person.age = 40
+        return client.save(creds, 'Person', [person])
       })
     }).timeout(25000) // Make sure our test doesn't timeout
   })
@@ -295,7 +287,7 @@ describe('Client', function() {
         person.age = 60 + i
         return person
       })
-      await client.create<Person>(dbID, 'Person', people)
+      await client.create<Person>(creds, 'Person', people)
     })
     it('Should return a full list of entities matching the given query', async () => {
       const q = new Where('age')
@@ -303,7 +295,7 @@ describe('Client', function() {
         .and('age')
         .lt(66)
         .or(new Where('age').eq(67))
-      const find = await client.find<Person>(dbID, 'Person', q)
+      const find = await client.find<Person>(creds, 'Person', q)
       expect(find).to.not.be.undefined
       const found = find.instancesList
       expect(found).to.have.length(7)
