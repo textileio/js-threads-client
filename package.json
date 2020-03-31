@@ -58,7 +58,7 @@
   "dependencies": {
     "@improbable-eng/grpc-web": "^0.12.0",
     "@textile/threads-client-grpc": "^0.1.12",
-    "@textile/threads-core": "0.0.3-alpha.2",
+    "@textile/threads-core": "0.0.3-alpha.3",
     "@types/google-protobuf": "^3.7.2",
     "b64-lite": "^1.4.0",
     "bs58": "^4.0.1",
