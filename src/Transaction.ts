@@ -1,5 +1,4 @@
 import { grpc } from '@improbable-eng/grpc-web'
-import { Creds } from './models'
 
 /**
  * Transaction represents a bulk transaction on a store.
@@ -8,12 +7,12 @@ export class Transaction<TRequest extends grpc.ProtobufMessage, TResponse extend
   /**
    * Transaction creates a new transaction for the given store using the given model.
    * @param client The gRPC client to use for the transaction.
-   * @param creds an instance of Creds
+   * @param dbID the ID of the database
    * @param modelName The human-readable name for the model.
    */
   constructor(
     protected readonly client: grpc.Client<TRequest, TResponse>,
-    protected readonly creds: Creds,
+    protected readonly dbID: Buffer,
     protected readonly modelName: string,
   ) {}
 

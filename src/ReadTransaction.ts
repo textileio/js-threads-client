@@ -9,7 +9,7 @@ import {
 } from '@textile/threads-client-grpc/api_pb'
 import { toBase64, fromBase64 } from 'b64-lite'
 import { Transaction } from './Transaction'
-import { Instance, InstanceList, Creds } from './models'
+import { Instance, InstanceList } from './models'
 import { JSONQuery } from './models'
 import { Config } from './config'
 
@@ -20,17 +20,17 @@ export class ReadTransaction extends Transaction<ReadTransactionRequest, ReadTra
   constructor(
     protected readonly config: Config,
     protected readonly client: grpc.Client<ReadTransactionRequest, ReadTransactionReply>,
-    protected readonly creds: Creds,
+    protected readonly dbID: Buffer,
     protected readonly modelName: string,
   ) {
-    super(client, creds, modelName)
+    super(client, dbID, modelName)
   }
   /**
    * start begins the transaction. All operations between start and end will be applied as a single transaction upon a call to end.
    */
   public async start() {
     const startReq = new StartTransactionRequest()
-    startReq.setCredentials(this.creds.grpcObject())
+    startReq.setDbid(this.dbID)
     startReq.setCollectionname(this.modelName)
     const req = new ReadTransactionRequest()
     req.setStarttransactionrequest(startReq)

@@ -1,29 +1,3 @@
-import { Credentials } from '@textile/threads-client-grpc/api_pb'
-import { ThreadID } from '@textile/threads-core'
-/**
- * Credentials for a Thread DB
- */
-export class Creds {
-  constructor(public DBID: Uint8Array | string, public pubKey?: string | Uint8Array, public signature?: string | Uint8Array) {}
-  grpcObject(): Credentials {
-    const creds = new Credentials()
-    creds.setThreadid(this.DBID)
-    if (this.pubKey) {
-      creds.setPubkey(this.pubKey)
-    }
-    if (this.signature) {
-      creds.setSignature(this.signature)
-    }
-    return creds
-  }
-
-  static defaultWithRandomID() {
-    const threadId = ThreadID.fromRandom()
-    const id = threadId.bytes()
-    return new Creds(id)
-  }
-}
-
 /**
  * Instance is a singular Model instance.
  */
