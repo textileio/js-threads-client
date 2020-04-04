@@ -28,11 +28,11 @@ ReadTransaction performs a read-only bulk transaction on the underlying store.
 
 ###  constructor
 
-\+ **new ReadTransaction**(`config`: [Config](config.md), `client`: Client‹ReadTransactionRequest, ReadTransactionReply›, `DBID`: string, `modelName`: string): *[ReadTransaction](readtransaction.md)*
+\+ **new ReadTransaction**(`config`: [Config](config.md), `client`: Client‹ReadTransactionRequest, ReadTransactionReply›, `dbID`: Buffer, `modelName`: string): *[ReadTransaction](readtransaction.md)*
 
 *Overrides [Transaction](transaction.md).[constructor](transaction.md#constructor)*
 
-*Defined in [src/ReadTransaction.ts:19](https://github.com/textileio/js-threads-client/blob/master/src/ReadTransaction.ts#L19)*
+*Defined in [src/ReadTransaction.ts:18](https://github.com/textileio/js-threads-client/blob/master/src/ReadTransaction.ts#L18)*
 
 **Parameters:**
 
@@ -40,7 +40,7 @@ Name | Type |
 ------ | ------ |
 `config` | [Config](config.md) |
 `client` | Client‹ReadTransactionRequest, ReadTransactionReply› |
-`DBID` | string |
+`dbID` | Buffer |
 `modelName` | string |
 
 **Returns:** *[ReadTransaction](readtransaction.md)*
@@ -65,7 +65,7 @@ ___
 
 ▸ **find**<**T**>(`query`: [JSONQuery](../interfaces/jsonquery.md)): *Promise‹[InstanceList](../interfaces/instancelist.md)‹T››*
 
-*Defined in [src/ReadTransaction.ts:65](https://github.com/textileio/js-threads-client/blob/master/src/ReadTransaction.ts#L65)*
+*Defined in [src/ReadTransaction.ts:64](https://github.com/textileio/js-threads-client/blob/master/src/ReadTransaction.ts#L64)*
 
 find queries the store for entities matching the given query parameters. See Query for options.
 
@@ -87,7 +87,7 @@ ___
 
 ▸ **findByID**<**T**>(`ID`: string): *Promise‹[Instance](../interfaces/instance.md)‹T››*
 
-*Defined in [src/ReadTransaction.ts:91](https://github.com/textileio/js-threads-client/blob/master/src/ReadTransaction.ts#L91)*
+*Defined in [src/ReadTransaction.ts:92](https://github.com/textileio/js-threads-client/blob/master/src/ReadTransaction.ts#L92)*
 
 findByID queries the store for the id of an instance.
 
@@ -109,7 +109,7 @@ ___
 
 ▸ **has**(`IDs`: string[]): *Promise‹boolean›*
 
-*Defined in [src/ReadTransaction.ts:46](https://github.com/textileio/js-threads-client/blob/master/src/ReadTransaction.ts#L46)*
+*Defined in [src/ReadTransaction.ts:45](https://github.com/textileio/js-threads-client/blob/master/src/ReadTransaction.ts#L45)*
 
 has checks whether a given instance exists in the given store.
 
@@ -127,7 +127,7 @@ ___
 
 ▸ **start**(): *Promise‹void›*
 
-*Defined in [src/ReadTransaction.ts:31](https://github.com/textileio/js-threads-client/blob/master/src/ReadTransaction.ts#L31)*
+*Defined in [src/ReadTransaction.ts:30](https://github.com/textileio/js-threads-client/blob/master/src/ReadTransaction.ts#L30)*
 
 start begins the transaction. All operations between start and end will be applied as a single transaction upon a call to end.
 

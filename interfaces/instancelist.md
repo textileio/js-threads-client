@@ -24,4 +24,4 @@ InstanceList is an array of Entities.
 
 • **instancesList**: *T[]*
 
-*Defined in [src/models.ts:12](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L12)*
+*Defined in [src/models.ts:21](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L21)*

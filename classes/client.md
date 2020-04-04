@@ -69,9 +69,9 @@ config is the (public) threads config.
 
 ###  create
 
-▸ **create**<**T**>(`DBID`: string, `collectionName`: string, `values`: any[]): *Promise‹[InstanceList](../interfaces/instancelist.md)‹T››*
+▸ **create**<**T**>(`dbID`: Buffer, `collectionName`: string, `values`: any[]): *Promise‹string[]›*
 
-*Defined in [src/index.ts:158](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L158)*
+*Defined in [src/index.ts:159](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L159)*
 
 create creates a new model instance in the given store.
 
@@ -83,19 +83,19 @@ create creates a new model instance in the given store.
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`DBID` | string | The id of the store in which create the new instance. |
+`dbID` | Buffer | the ID of the database |
 `collectionName` | string | The human-readable name of the model to use. |
 `values` | any[] | An array of model instances as JSON/JS objects.  |
 
-**Returns:** *Promise‹[InstanceList](../interfaces/instancelist.md)‹T››*
+**Returns:** *Promise‹string[]›*
 
 ___
 
 ###  delete
 
-▸ **delete**(`DBID`: string, `collectionName`: string, `IDs`: string[]): *Promise‹void›*
+▸ **delete**(`dbID`: Buffer, `collectionName`: string, `IDs`: string[]): *Promise‹void›*
 
-*Defined in [src/index.ts:203](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L203)*
+*Defined in [src/index.ts:201](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L201)*
 
 delete deletes an existing model instance from the given store.
 
@@ -103,7 +103,7 @@ delete deletes an existing model instance from the given store.
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`DBID` | string | The id of the store from which to remove the given instances. |
+`dbID` | Buffer | the ID of the database |
 `collectionName` | string | The human-readable name of the model to use. |
 `IDs` | string[] | An array of instance ids to delete.  |
 
@@ -113,9 +113,9 @@ ___
 
 ###  find
 
-▸ **find**<**T**>(`DBID`: string, `collectionName`: string, `query`: [JSONQuery](../interfaces/jsonquery.md)): *Promise‹[InstanceList](../interfaces/instancelist.md)‹T››*
+▸ **find**<**T**>(`dbID`: Buffer, `collectionName`: string, `query`: [JSONQuery](../interfaces/jsonquery.md)): *Promise‹[InstanceList](../interfaces/instancelist.md)‹T››*
 
-*Defined in [src/index.ts:233](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L233)*
+*Defined in [src/index.ts:231](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L231)*
 
 find queries the store for entities matching the given query parameters. See Query for options.
 
@@ -127,7 +127,7 @@ find queries the store for entities matching the given query parameters. See Que
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`DBID` | string | The id of the store on which to perform the query. |
+`dbID` | Buffer | the ID of the database |
 `collectionName` | string | The human-readable name of the model to use. |
 `query` | [JSONQuery](../interfaces/jsonquery.md) | The object that describes the query. See Query for options. Alternatively, see JSONQuery for the basic interface.  |
 
@@ -137,9 +137,9 @@ ___
 
 ###  findByID
 
-▸ **findByID**<**T**>(`DBID`: string, `collectionName`: string, `ID`: string): *Promise‹[Instance](../interfaces/instance.md)‹T››*
+▸ **findByID**<**T**>(`dbID`: Buffer, `collectionName`: string, `ID`: string): *Promise‹[Instance](../interfaces/instance.md)‹T››*
 
-*Defined in [src/index.ts:254](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L254)*
+*Defined in [src/index.ts:252](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L252)*
 
 findByID queries the store for the id of an instance.
 
@@ -151,7 +151,7 @@ findByID queries the store for the id of an instance.
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`DBID` | string | The id of the store on which to perform the query. |
+`dbID` | Buffer | the ID of the database |
 `collectionName` | string | The human-readable name of the model to use. |
 `ID` | string | The id of the instance to search for.  |
 
@@ -161,7 +161,7 @@ ___
 
 ###  getDBInfo
 
-▸ **getDBInfo**(`DBID`: string): *Promise‹object[]›*
+▸ **getDBInfo**(`dbID`: Buffer): *Promise‹object[]›*
 
 *Defined in [src/index.ts:137](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L137)*
 
@@ -171,7 +171,7 @@ getDBInfo returns invite 'links' unseful for inviting other peers to join a give
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`DBID` | string | The id of the store for which to create the invite.  |
+`dbID` | Buffer | the ID of the database  |
 
 **Returns:** *Promise‹object[]›*
 
@@ -179,9 +179,9 @@ ___
 
 ###  has
 
-▸ **has**(`DBID`: string, `collectionName`: string, `IDs`: string[]): *Promise‹boolean›*
+▸ **has**(`dbID`: Buffer, `collectionName`: string, `IDs`: string[]): *Promise‹boolean›*
 
-*Defined in [src/index.ts:218](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L218)*
+*Defined in [src/index.ts:216](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L216)*
 
 has checks whether a given instance exists in the given store.
 
@@ -189,7 +189,7 @@ has checks whether a given instance exists in the given store.
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`DBID` | string | The id of the store in which to check inclusion. |
+`dbID` | Buffer | the ID of the database |
 `collectionName` | string | The human-readable name of the model to use. |
 `IDs` | string[] | An array of instance ids to check for.  |
 
@@ -199,7 +199,7 @@ ___
 
 ###  listen
 
-▸ **listen**<**T**>(`DBID`: string, `collectionName`: string, `ID`: string, `callback`: function): *function*
+▸ **listen**<**T**>(`dbID`: Buffer, `filters`: [Filter](../interfaces/filter.md)[], `callback`: function): *function*
 
 *Defined in [src/index.ts:298](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L298)*
 
@@ -212,17 +212,13 @@ The return value is a `close` function, which cleanly closes the connection with
 
 **Parameters:**
 
-▪ **DBID**: *string*
+▪ **dbID**: *Buffer*
 
-The id of the store on which to open the connection.
+the ID of the database
 
-▪ **collectionName**: *string*
+▪ **filters**: *[Filter](../interfaces/filter.md)[]*
 
-The human-readable name of the model to use.
-
-▪ **ID**: *string*
-
-The id of the instance to monitor.
+contains an array of Filters
 
 ▪ **callback**: *function*
 
@@ -245,9 +241,9 @@ ___
 
 ###  newCollection
 
-▸ **newCollection**(`DBID`: string, `name`: string, `schema`: any): *Promise‹void›*
+▸ **newCollection**(`dbID`: Buffer, `name`: string, `schema`: any): *Promise‹void›*
 
-*Defined in [src/index.ts:90](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L90)*
+*Defined in [src/index.ts:91](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L91)*
 
 newCollection registers a new model schema under the given name on the remote node.
 The schema must be a valid json-schema.org schema, and can be a JSON string or Javascript object.
@@ -256,7 +252,7 @@ The schema must be a valid json-schema.org schema, and can be a JSON string or J
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`DBID` | string | The id of the store with which to register the new model. |
+`dbID` | Buffer | the ID of the database |
 `name` | string | The human-readable name for the model. |
 `schema` | any | The actual json-schema.org compatible schema object.  |
 
@@ -266,17 +262,17 @@ ___
 
 ###  newDB
 
-▸ **newDB**(`DBID`: string): *Promise‹void›*
+▸ **newDB**(`dbID`: Buffer): *Promise‹void›*
 
-*Defined in [src/index.ts:76](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L76)*
+*Defined in [src/index.ts:77](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L77)*
 
 newDB creates a new store on the remote node.
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`DBID` | string |
+Name | Type | Description |
+------ | ------ | ------ |
+`dbID` | Buffer | the ID of the database  |
 
 **Returns:** *Promise‹void›*
 
@@ -284,9 +280,9 @@ ___
 
 ###  newDBFromAddr
 
-▸ **newDBFromAddr**(`address`: string, `DBKey`: string | Uint8Array, `collections`: Array‹object›): *Promise‹void›*
+▸ **newDBFromAddr**(`address`: string, `key`: string | Uint8Array, `collections`: Array‹object›): *Promise‹unknown›*
 
-*Defined in [src/index.ts:113](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L113)*
+*Defined in [src/index.ts:114](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L114)*
 
 startFromAddress initializes the client with the given store, connecting to the given
 thread address (database). It should be called before any operation on the store, and is an
@@ -299,18 +295,18 @@ See `getDBInfo` for a possible source of the address and keys.
 Name | Type | Description |
 ------ | ------ | ------ |
 `address` | string | The address for the thread with which to connect. Should be of the form /ip4/<url/ip-address>/tcp/<port>/p2p/<peer-id>/thread/<thread-id> |
-`DBKey` | string &#124; Uint8Array | The DBKey provided through an invite or from getDBInfo. |
+`key` | string &#124; Uint8Array | - |
 `collections` | Array‹object› | An array of Name and JSON Schemas for collections in the DB.  |
 
-**Returns:** *Promise‹void›*
+**Returns:** *Promise‹unknown›*
 
 ___
 
 ###  readTransaction
 
-▸ **readTransaction**(`DBID`: string, `collectionName`: string): *[ReadTransaction](readtransaction.md)*
+▸ **readTransaction**(`dbID`: Buffer, `collectionName`: string): *[ReadTransaction](readtransaction.md)*
 
-*Defined in [src/index.ts:271](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L271)*
+*Defined in [src/index.ts:269](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L269)*
 
 readTransaction creates a new read-only transaction object. See ReadTransaction for details.
 
@@ -318,7 +314,7 @@ readTransaction creates a new read-only transaction object. See ReadTransaction 
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`DBID` | string | The id of the store on which to perform the transaction. |
+`dbID` | Buffer | the ID of the database |
 `collectionName` | string | The human-readable name of the model to use.  |
 
 **Returns:** *[ReadTransaction](readtransaction.md)*
@@ -327,9 +323,9 @@ ___
 
 ###  save
 
-▸ **save**(`DBID`: string, `collectionName`: string, `values`: any[]): *Promise‹void›*
+▸ **save**(`dbID`: Buffer, `collectionName`: string, `values`: any[]): *Promise‹void›*
 
-*Defined in [src/index.ts:181](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L181)*
+*Defined in [src/index.ts:179](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L179)*
 
 save saves changes to an existing model instance in the given store.
 
@@ -337,7 +333,7 @@ save saves changes to an existing model instance in the given store.
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`DBID` | string | The id of the store in which the existing instance will be saved. |
+`dbID` | Buffer | the ID of the database |
 `collectionName` | string | The human-readable name of the model to use. |
 `values` | any[] | An array of model instances as JSON/JS objects. Each model instance must have a valid existing `ID` property.  |
 
@@ -347,9 +343,9 @@ ___
 
 ###  writeTransaction
 
-▸ **writeTransaction**(`DBID`: string, `collectionName`: string): *[WriteTransaction](writetransaction.md)*
+▸ **writeTransaction**(`dbID`: Buffer, `collectionName`: string): *[WriteTransaction](writetransaction.md)*
 
-*Defined in [src/index.ts:283](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L283)*
+*Defined in [src/index.ts:281](https://github.com/textileio/js-threads-client/blob/master/src/index.ts#L281)*
 
 writeTransaction creates a new writeable transaction object. See WriteTransaction for details.
 
@@ -357,7 +353,7 @@ writeTransaction creates a new writeable transaction object. See WriteTransactio
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`DBID` | string | The id of the store on which to perform the transaction. |
+`dbID` | Buffer | the ID of the database |
 `collectionName` | string | The human-readable name of the model to use.  |
 
 **Returns:** *[WriteTransaction](writetransaction.md)*

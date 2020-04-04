@@ -24,4 +24,4 @@ Instance is a singular Model instance.
 
 • **instance**: *T*
 
-*Defined in [src/models.ts:5](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L5)*
+*Defined in [src/models.ts:14](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L14)*

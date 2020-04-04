@@ -27,7 +27,7 @@ JSONCriterion represents a single Query criteria.
 
 • **fieldPath**? : *undefined | string*
 
-*Defined in [src/models.ts:45](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L45)*
+*Defined in [src/models.ts:54](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L54)*
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 • **operation**? : *[JSONOperation](../enums/jsonoperation.md)*
 
-*Defined in [src/models.ts:46](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L46)*
+*Defined in [src/models.ts:55](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L55)*
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 • **query**? : *[JSONQuery](jsonquery.md)*
 
-*Defined in [src/models.ts:48](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L48)*
+*Defined in [src/models.ts:57](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L57)*
 
 ___
 
@@ -51,4 +51,4 @@ ___
 
 • **value**? : *[JSONValue](jsonvalue.md)*
 
-*Defined in [src/models.ts:47](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L47)*
+*Defined in [src/models.ts:56](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L56)*

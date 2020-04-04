@@ -22,7 +22,7 @@ JSONValue is used by the gRPC server to handle JSON data types.
 
 • **bool**? : *undefined | false | true*
 
-*Defined in [src/models.ts:25](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L25)*
+*Defined in [src/models.ts:34](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L34)*
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 • **float**? : *undefined | number*
 
-*Defined in [src/models.ts:26](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L26)*
+*Defined in [src/models.ts:35](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L35)*
 
 ___
 
@@ -38,4 +38,4 @@ ___
 
 • **string**? : *undefined | string*
 
-*Defined in [src/models.ts:24](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L24)*
+*Defined in [src/models.ts:33](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L33)*

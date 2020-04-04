@@ -26,7 +26,7 @@ JSONQuery represents a single store Query.
 
 • **ands**? : *[JSONCriterion](jsoncriterion.md)[]*
 
-*Defined in [src/models.ts:63](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L63)*
+*Defined in [src/models.ts:72](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L72)*
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 • **ors**? : *[JSONQuery](jsonquery.md)[]*
 
-*Defined in [src/models.ts:64](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L64)*
+*Defined in [src/models.ts:73](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L73)*
 
 ___
 
@@ -42,4 +42,4 @@ ___
 
 • **sort**? : *[JSONSort](jsonsort.md)*
 
-*Defined in [src/models.ts:65](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L65)*
+*Defined in [src/models.ts:74](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L74)*

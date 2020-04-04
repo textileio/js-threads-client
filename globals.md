@@ -21,6 +21,7 @@
 ### Interfaces
 
 * [BaseConfig](interfaces/baseconfig.md)
+* [Filter](interfaces/filter.md)
 * [Instance](interfaces/instance.md)
 * [InstanceList](interfaces/instancelist.md)
 * [JSONCriterion](interfaces/jsoncriterion.md)
@@ -46,7 +47,7 @@
 
 Ƭ **Value**: *string | boolean | number*
 
-*Defined in [src/models.ts:18](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L18)*
+*Defined in [src/models.ts:27](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L27)*
 
 Value represents a valid JSON data type.
 

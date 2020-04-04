@@ -31,11 +31,11 @@ WriteTransaction performs a mutating bulk transaction on the underlying store.
 
 ###  constructor
 
-\+ **new WriteTransaction**(`config`: [Config](config.md), `client`: Client‹WriteTransactionRequest, WriteTransactionReply›, `DBID`: string, `modelName`: string): *[WriteTransaction](writetransaction.md)*
+\+ **new WriteTransaction**(`config`: [Config](config.md), `client`: Client‹WriteTransactionRequest, WriteTransactionReply›, `dbID`: Buffer, `modelName`: string): *[WriteTransaction](writetransaction.md)*
 
 *Overrides [Transaction](transaction.md).[constructor](transaction.md#constructor)*
 
-*Defined in [src/WriteTransaction.ts:22](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L22)*
+*Defined in [src/WriteTransaction.ts:21](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L21)*
 
 **Parameters:**
 
@@ -43,7 +43,7 @@ Name | Type |
 ------ | ------ |
 `config` | [Config](config.md) |
 `client` | Client‹WriteTransactionRequest, WriteTransactionReply› |
-`DBID` | string |
+`dbID` | Buffer |
 `modelName` | string |
 
 **Returns:** *[WriteTransaction](writetransaction.md)*
@@ -52,9 +52,9 @@ Name | Type |
 
 ###  create
 
-▸ **create**<**T**>(`values`: any[]): *Promise‹undefined | [InstanceList](../interfaces/instancelist.md)‹T››*
+▸ **create**<**T**>(`values`: any[]): *Promise‹undefined | string[]›*
 
-*Defined in [src/WriteTransaction.ts:48](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L48)*
+*Defined in [src/WriteTransaction.ts:47](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L47)*
 
 create creates a new model instance in the given store.
 
@@ -68,7 +68,7 @@ Name | Type | Description |
 ------ | ------ | ------ |
 `values` | any[] | An array of model instances as JSON/JS objects.  |
 
-**Returns:** *Promise‹undefined | [InstanceList](../interfaces/instancelist.md)‹T››*
+**Returns:** *Promise‹undefined | string[]›*
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 ▸ **delete**(`IDs`: string[]): *Promise‹void›*
 
-*Defined in [src/WriteTransaction.ts:104](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L104)*
+*Defined in [src/WriteTransaction.ts:100](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L100)*
 
 delete deletes an existing model instance from the given store.
 
@@ -108,7 +108,7 @@ ___
 
 ▸ **find**<**T**>(`query`: [JSONQuery](../interfaces/jsonquery.md)): *Promise‹[InstanceList](../interfaces/instancelist.md)‹T››*
 
-*Defined in [src/WriteTransaction.ts:139](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L139)*
+*Defined in [src/WriteTransaction.ts:135](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L135)*
 
 find queries the store for entities matching the given query parameters. See Query for options.
 
@@ -130,7 +130,7 @@ ___
 
 ▸ **findByID**<**T**>(`ID`: string): *Promise‹undefined | [Instance](../interfaces/instance.md)‹T››*
 
-*Defined in [src/WriteTransaction.ts:165](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L165)*
+*Defined in [src/WriteTransaction.ts:163](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L163)*
 
 findByID queries the store for the id of an instance.
 
@@ -152,7 +152,7 @@ ___
 
 ▸ **has**(`IDs`: string[]): *Promise‹boolean›*
 
-*Defined in [src/WriteTransaction.ts:121](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L121)*
+*Defined in [src/WriteTransaction.ts:117](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L117)*
 
 has checks whether a given instance exists in the given store.
 
@@ -170,7 +170,7 @@ ___
 
 ▸ **save**(`values`: any[]): *Promise‹void›*
 
-*Defined in [src/WriteTransaction.ts:79](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L79)*
+*Defined in [src/WriteTransaction.ts:75](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L75)*
 
 save saves changes to an existing model instance in the given store.
 
@@ -188,7 +188,7 @@ ___
 
 ▸ **start**(): *Promise‹void›*
 
-*Defined in [src/WriteTransaction.ts:34](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L34)*
+*Defined in [src/WriteTransaction.ts:33](https://github.com/textileio/js-threads-client/blob/master/src/WriteTransaction.ts#L33)*
 
 start begins the transaction. All operations between start and end will be applied as a single transaction upon a call to end.
 

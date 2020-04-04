@@ -21,7 +21,7 @@ JSONSort describes how and what field on which to sort a query.
 
 • **desc**: *boolean*
 
-*Defined in [src/models.ts:56](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L56)*
+*Defined in [src/models.ts:65](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L65)*
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 • **fieldPath**: *string*
 
-*Defined in [src/models.ts:55](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L55)*
+*Defined in [src/models.ts:64](https://github.com/textileio/js-threads-client/blob/master/src/models.ts#L64)*
