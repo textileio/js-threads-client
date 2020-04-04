@@ -11,7 +11,6 @@ import {
   WriteTransactionRequest,
   WriteTransactionReply,
 } from '@textile/threads-client-grpc/api_pb'
-import { toBase64, fromBase64 } from 'b64-lite'
 import { Config } from './config'
 import { Instance, InstanceList, JSONQuery } from './models'
 import { Transaction } from './Transaction'
@@ -136,7 +135,7 @@ export class WriteTransaction extends Transaction<WriteTransactionRequest, Write
   public async find<T = any>(query: JSONQuery) {
     return new Promise<InstanceList<T>>((resolve, reject) => {
       const findReq = new FindRequest()
-      findReq.setQueryjson(toBase64(JSON.stringify(query)))
+      findReq.setQueryjson(Buffer.from(JSON.stringify(query)))
       const req = new WriteTransactionRequest()
       req.setFindrequest(findReq)
       this.client.onMessage((message: WriteTransactionReply) => {
@@ -145,7 +144,9 @@ export class WriteTransaction extends Transaction<WriteTransactionRequest, Write
           resolve()
         } else {
           const ret: InstanceList<T> = {
-            instancesList: reply.toObject().instancesList.map(instance => JSON.parse(fromBase64(instance as string))),
+            instancesList: reply
+              .toObject()
+              .instancesList.map(instance => JSON.parse(Buffer.from(instance as string, 'base64').toString())),
           }
           resolve(ret)
         }
@@ -171,7 +172,7 @@ export class WriteTransaction extends Transaction<WriteTransactionRequest, Write
           resolve()
         } else {
           const ret: Instance<T> = {
-            instance: JSON.parse(fromBase64(reply.toObject().instance as string)),
+            instance: JSON.parse(Buffer.from(reply.toObject().instance as string, 'base64').toString()),
           }
           resolve(ret)
         }
