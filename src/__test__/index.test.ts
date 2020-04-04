@@ -276,7 +276,15 @@ describe('Client', function() {
           listener.close()
         }
       }
-      listener.close = client.listen<Person>(dbID, 'Person', existingPersonID, callback)
+      listener.close = client.listen<Person>(
+        dbID,
+        [
+          {
+            instanceID: existingPersonID,
+          },
+        ],
+        callback,
+      )
       person.age = 30
       client.save(dbID, 'Person', [person])
       person.age = 40

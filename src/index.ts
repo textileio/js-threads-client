@@ -293,26 +293,56 @@ export class Client {
    * @param dbID the ID of the database
    * @param collectionName The human-readable name of the model to use.
    * @param ID The id of the instance to monitor.
+   * @param actionTypes ALL, CREATE, DELETE, SAVE. Default ALL.
    * @param callback The callback to call on each update to the given instance.
    */
   public listen<T = any>(
     dbID: Buffer,
-    collectionName: string,
-    ID: string,
+    filters: [
+      {
+        collectionName?: string
+        instanceID?: string
+        actionTypes?: string[]
+      },
+    ],
     callback: (reply?: Instance<T>, err?: Error) => void,
   ) {
     const req = new ListenRequest()
+    // const filters: ListenRequest.Filter[] = []
+    // const create = ListenRequest.Filter.Action.CREATE
+    // filters.push(create)
+    // req.setFil
     req.setDbid(dbID)
-    if (collectionName && collectionName !== '') {
-      const filter = new ListenRequest.Filter()
-      filter.setCollectionname(collectionName)
-      req.addFilters(filter)
+    for (const filter of filters) {
+      const requestFilter = new ListenRequest.Filter()
+      if (filter.instanceID) {
+        requestFilter.setInstanceid(filter.instanceID)
+      } else if (filter.collectionName) {
+        requestFilter.setCollectionname(filter.collectionName)
+      }
+      if (filter.actionTypes) {
+        for (const at of filter.actionTypes) {
+          switch (at) {
+            case 'ALL': {
+              requestFilter.setAction(0)
+            }
+            case 'CREATE': {
+              requestFilter.setAction(1)
+            }
+            case 'SAVE': {
+              requestFilter.setAction(2)
+            }
+            case 'DELETE': {
+              requestFilter.setAction(3)
+            }
+          }
+        }
+      } else {
+        requestFilter.setAction(0)
+      }
+      req.addFilters(requestFilter)
     }
-    if (ID && ID !== '') {
-      const filter = new ListenRequest.Filter()
-      filter.setInstanceid(ID)
-      req.addFilters(filter)
-    }
+
     const res = grpc.invoke(API.Listen, {
       host: this.config.host,
       request: req,
