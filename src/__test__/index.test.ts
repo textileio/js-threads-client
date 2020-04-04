@@ -12,6 +12,7 @@ import { JSONQuery, JSONOperation } from '../models'
 import { Where } from '../query'
 
 const client = new Client()
+const sleep = () => new Promise(resolve => setTimeout(resolve, 500))
 
 const personSchema = {
   $id: 'https://example.com/person.schema.json',
@@ -253,30 +254,32 @@ describe('Client', function() {
   describe('.listen', () => {
     const person = createPerson()
     let existingPersonID: string
-    const events: number[] = []
     before(async () => {
       const entities = await client.create<Person>(dbID, 'Person', [person])
       existingPersonID = entities.length ? entities[0] : ''
       person['ID'] = existingPersonID
     })
     it('should stream responses.', done => {
-      const close = client.listen<Person>(dbID, 'Person', existingPersonID, (reply, err) => {
+      const listener: { events: number; close?: () => void } = { events: 0 }
+      const callback = (reply: any, err?: Error) => {
+        if (err) {
+          throw err
+        }
         const instance = reply?.instance
         expect(instance).to.not.be.undefined
         expect(instance).to.have.property('age')
         expect(instance?.age).to.be.greaterThan(21)
-        events.push(instance?.age || 0)
-        if (events.length == 2) {
-          close()
+        listener.events += 1
+        if (listener.events > 1 && listener.close) {
           done()
+          listener.close()
         }
-        if (err) {
-          throw err
-        }
-      })
+      }
+      listener.close = client.listen<Person>(dbID, 'Person', existingPersonID, callback)
       person.age = 30
-      client.save(dbID, 'Person', [person]).then(() => {
+      client.save(dbID, 'Person', [person]).then(async () => {
         person.age = 40
+        await sleep()
         return client.save(dbID, 'Person', [person])
       })
     }).timeout(25000) // Make sure our test doesn't timeout
