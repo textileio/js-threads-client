@@ -4,9 +4,7 @@ import { grpc } from '@improbable-eng/grpc-web'
 import { API } from '@textile/threads-client-grpc/api_pb_service'
 import {
   NewDBRequest,
-  NewDBReply,
   NewDBFromAddrRequest,
-  NewCollectionReply,
   NewCollectionRequest,
   CollectionConfig,
   CreateRequest,
@@ -34,7 +32,7 @@ import * as pack from '../package.json'
 import { ReadTransaction } from './ReadTransaction'
 import { WriteTransaction } from './WriteTransaction'
 import { Config, BaseConfig } from './config'
-import { JSONQuery, Instance, InstanceList } from './models'
+import { JSONQuery, Instance, InstanceList, Filter } from './models'
 
 export { ThreadID }
 export { BaseConfig, Config, Instance, JSONQuery }
@@ -291,27 +289,14 @@ export class Client {
    * listen opens a long-lived connection with a remote node, running the given callback on each new update to the given instance.
    * The return value is a `close` function, which cleanly closes the connection with the remote node.
    * @param dbID the ID of the database
+   * @param filters contains an array of Filters
    * @param collectionName The human-readable name of the model to use.
    * @param ID The id of the instance to monitor.
    * @param actionTypes ALL, CREATE, DELETE, SAVE. Default ALL.
    * @param callback The callback to call on each update to the given instance.
    */
-  public listen<T = any>(
-    dbID: Buffer,
-    filters: [
-      {
-        collectionName?: string
-        instanceID?: string
-        actionTypes?: string[]
-      },
-    ],
-    callback: (reply?: Instance<T>, err?: Error) => void,
-  ) {
+  public listen<T = any>(dbID: Buffer, filters: Filter[], callback: (reply?: Instance<T>, err?: Error) => void) {
     const req = new ListenRequest()
-    // const filters: ListenRequest.Filter[] = []
-    // const create = ListenRequest.Filter.Action.CREATE
-    // filters.push(create)
-    // req.setFil
     req.setDbid(dbID)
     for (const filter of filters) {
       const requestFilter = new ListenRequest.Filter()
