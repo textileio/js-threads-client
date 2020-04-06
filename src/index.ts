@@ -112,9 +112,9 @@ export class Client {
   }
 
   /**
-   * startFromAddress initializes the client with the given store, connecting to the given
+   * newDBFromAddr initializes the client with the given store, connecting to the given
    * thread address (database). It should be called before any operation on the store, and is an
-   * alternative to start, which creates a local store. startFromAddress should also include the
+   * alternative to start, which creates a local store. newDBFromAddr should also include the
    * read and follow keys, which should be Buffer, Uint8Array or base58-encoded strings.
    * See `getDBInfo` for a possible source of the address and keys.
    * @param dbID the ID of the database
@@ -163,7 +163,7 @@ export class Client {
   }
 
   /**
-   * create creates a new model instance in the given store.
+   * Creates a new model instance in the given store.
    * @param dbID the ID of the database
    * @param collectionName The human-readable name of the model to use.
    * @param values An array of model instances as JSON/JS objects.
@@ -183,7 +183,7 @@ export class Client {
   }
 
   /**
-   * save saves changes to an existing model instance in the given store.
+   * Saves changes to an existing model instance in the given store.
    * @param dbID the ID of the database
    * @param collectionName The human-readable name of the model to use.
    * @param values An array of model instances as JSON/JS objects. Each model instance must have a valid existing `ID` property.
@@ -205,7 +205,7 @@ export class Client {
   }
 
   /**
-   * delete deletes an existing model instance from the given store.
+   * Deletes an existing model instance from the given store.
    * @param dbID the ID of the database
    * @param collectionName The human-readable name of the model to use.
    * @param IDs An array of instance ids to delete.
@@ -302,9 +302,6 @@ export class Client {
    * The return value is a `close` function, which cleanly closes the connection with the remote node.
    * @param dbID the ID of the database
    * @param filters contains an array of Filters
-   * @param collectionName The human-readable name of the model to use.
-   * @param ID The id of the instance to monitor.
-   * @param actionTypes ALL, CREATE, DELETE, SAVE. Default ALL.
    * @param callback The callback to call on each update to the given instance.
    */
   public listen<T = any>(dbID: Buffer, filters: Filter[], callback: (reply?: Instance<T>, err?: Error) => void) {
