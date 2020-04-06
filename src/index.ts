@@ -1,3 +1,7 @@
+/**
+ * @packageDocumentation
+ * @module @textile/threads-client
+ */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as uuid from 'uuid'
 import { grpc } from '@improbable-eng/grpc-web'
@@ -29,14 +33,22 @@ import {
 import { ThreadID } from '@textile/threads-core'
 import { encode, decode } from 'bs58'
 import * as pack from '../package.json'
-import { ReadTransaction } from './ReadTransaction'
-import { WriteTransaction } from './WriteTransaction'
-import { Config, BaseConfig } from './config'
-import { JSONQuery, Instance, InstanceList, Filter } from './models'
+import {
+  Config,
+  BaseConfig,
+  QueryJSON,
+  Instance,
+  InstanceList,
+  Filter,
+  Query,
+  Where,
+  WriteTransaction,
+  ReadTransaction,
+} from './models'
 
 export { ThreadID }
-export { BaseConfig, Config, Instance, JSONQuery }
-export { Query, Where } from './query'
+export { BaseConfig, Config, Instance, QueryJSON }
+export { Query, Where }
 
 /**
  * Client is a web-gRPC wrapper client for communicating with a webgRPC-enabled Textile server.
@@ -120,7 +132,7 @@ export class Client {
     req.setAddr(address)
     req.setKey(typeof key === 'string' ? decode(key) : key)
     req.setCollectionsList(
-      collections.map(c => {
+      collections.map((c) => {
         const config = new CollectionConfig()
         config.setName(c.name)
         config.setSchema(JSON.stringify(c.schema))
@@ -161,7 +173,7 @@ export class Client {
     req.setDbid(dbID)
     req.setCollectionname(collectionName)
     const list: any[] = []
-    values.forEach(v => {
+    values.forEach((v) => {
       v['ID'] = uuid.v4()
       list.push(Buffer.from(JSON.stringify(v)))
     })
@@ -181,7 +193,7 @@ export class Client {
     req.setDbid(dbID)
     req.setCollectionname(collectionName)
     const list: any[] = []
-    values.forEach(v => {
+    values.forEach((v) => {
       if (!v.hasOwnProperty('ID')) {
         v['ID'] = '' // The server will add an ID if empty.
       }
@@ -223,12 +235,12 @@ export class Client {
   }
 
   /**
-   * find queries the store for entities matching the given query parameters. See Query for options.
+   * find queries the store for entities matching the given query parameters.
    * @param dbID the ID of the database
    * @param collectionName The human-readable name of the model to use.
-   * @param query The object that describes the query. See Query for options. Alternatively, see JSONQuery for the basic interface.
+   * @param query The object that describes the query. User Query class or primitive QueryJSON type.
    */
-  public async find<T = any>(dbID: Buffer, collectionName: string, query: JSONQuery) {
+  public async find<T = any>(dbID: Buffer, collectionName: string, query: QueryJSON) {
     const req = new FindRequest()
     req.setDbid(dbID)
     req.setCollectionname(collectionName)
@@ -236,7 +248,7 @@ export class Client {
     req.setQueryjson(Buffer.from(JSON.stringify(query)).toString('base64'))
     const res = (await this.unary(API.Find, req)) as FindReply.AsObject
     const ret: InstanceList<T> = {
-      instancesList: res.instancesList.map(instance =>
+      instancesList: res.instancesList.map((instance) =>
         JSON.parse(Buffer.from(instance as string, 'base64').toString()),
       ),
     }
@@ -358,7 +370,7 @@ export class Client {
         request: req,
         host: this.config.host,
         metadata: this.config._wrapMetadata(),
-        onEnd: res => {
+        onEnd: (res) => {
           const { status, statusMessage, message } = res
           if (status === grpc.Code.OK) {
             if (message) {
