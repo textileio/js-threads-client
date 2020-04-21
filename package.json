@@ -54,6 +54,7 @@
     "@improbable-eng/grpc-web": "^0.12.0",
     "@textile/threads-client-grpc": "^0.1.14",
     "@textile/threads-core": "^0.1.0",
+    "@textile/threads-id": "0.0.1",
     "@types/google-protobuf": "^3.7.2",
     "bs58": "^4.0.1",
     "google-protobuf": "^3.10.0",
