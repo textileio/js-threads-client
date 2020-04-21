@@ -31,7 +31,7 @@ import {
   GetDBInfoReply,
 } from '@textile/threads-client-grpc/api_pb'
 import nextTick from 'next-tick'
-import { Multiaddr } from '@textile/threads-core'
+import { Multiaddr } from '@textile/multiaddr'
 import { ThreadID } from '@textile/threads-id'
 import { encode, decode } from 'bs58'
 import * as pack from '../package.json'
