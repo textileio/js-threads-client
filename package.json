@@ -61,7 +61,6 @@
     "google-protobuf": "^3.10.0",
     "isomorphic-ws": "^4.0.1",
     "next-tick": "^1.1.0",
-    "uuid": "^3.4.0",
     "ws": "^7.2.3"
   },
   "devDependencies": {

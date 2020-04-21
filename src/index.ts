@@ -3,7 +3,6 @@
  * @module @textile/threads-client
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import * as uuid from 'uuid'
 import { grpc } from '@improbable-eng/grpc-web'
 import { API } from '@textile/threads-client-grpc/api_pb_service'
 import {
@@ -176,7 +175,6 @@ export class Client {
     req.setCollectionname(collectionName)
     const list: any[] = []
     values.forEach((v) => {
-      v['ID'] = v['ID'] === null ? uuid.v4() : v['ID']
       list.push(Buffer.from(JSON.stringify(v)))
     })
     req.setInstancesList(list)
