@@ -5,8 +5,8 @@
 ;(global as any).WebSocket = require('isomorphic-ws')
 
 import { expect } from 'chai'
-import { Client, ThreadID } from './index'
 import { QueryJSON, ComparisonJSON, Where, ReadTransaction, WriteTransaction } from './models'
+import { Client, ThreadID } from './index'
 
 const client = new Client()
 
