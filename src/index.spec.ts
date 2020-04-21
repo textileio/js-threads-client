@@ -5,8 +5,7 @@
 ;(global as any).WebSocket = require('isomorphic-ws')
 
 import { expect } from 'chai'
-import uuid from 'uuid/v4'
-import { QueryJSON, ComparisonJSON, Where, ReadTransaction, WriteTransaction } from './models'
+import { Where, ReadTransaction, WriteTransaction } from './models'
 import { Client, ThreadID } from './index'
 
 const client = new Client()
@@ -47,7 +46,7 @@ interface Person {
 
 const createPerson = (): Person => {
   return {
-    ID: uuid(),
+    ID: '',
     firstName: 'Adam',
     lastName: 'Doe',
     age: 21,
@@ -94,16 +93,16 @@ describe('Client', function () {
   })
   describe('.create', () => {
     it('response should contain a JSON parsable instancesList', async () => {
-      const entities = await client.create<Person>(dbID, 'Person', [createPerson()])
-      expect(entities.length).to.equal(1)
+      const instances = await client.create<Person>(dbID, 'Person', [createPerson()])
+      expect(instances.length).to.equal(1)
     })
   })
   describe('.save', () => {
     it('response should be defined and be an empty object', async () => {
       const person = createPerson()
-      const entities = await client.create<Person>(dbID, 'Person', [person])
-      expect(entities.length).to.equal(1)
-      person.ID = entities[0]
+      const instances = await client.create<Person>(dbID, 'Person', [person])
+      expect(instances.length).to.equal(1)
+      person.ID = instances[0]
       person!.age = 30
       const save = await client.save(dbID, 'Person', [person])
       expect(save).to.be.undefined
@@ -111,40 +110,32 @@ describe('Client', function () {
   })
   describe('.delete', () => {
     it('response should be defined and be an empty object', async () => {
-      const entities = await client.create<Person>(dbID, 'Person', [createPerson()])
-      expect(entities.length).to.equal(1)
-      const personID = entities[0]
+      const instances = await client.create<Person>(dbID, 'Person', [createPerson()])
+      expect(instances.length).to.equal(1)
+      const personID = instances[0]
       const deleted = await client.delete(dbID, 'Person', [personID])
       expect(deleted).to.be.undefined
     })
   })
   describe('.has', () => {
     it('response be an object with property "exists" equal to true', async () => {
-      const entities = await client.create(dbID, 'Person', [createPerson()])
+      const instances = await client.create(dbID, 'Person', [createPerson()])
       // Here we 'test' a different approach where we didn't use generics above to create the instance...
-      expect(entities.length).to.equal(1)
-      const personID = entities[0]
+      expect(instances.length).to.equal(1)
+      const personID = instances[0]
       const has = await client.has(dbID, 'Person', [personID])
       expect(has).to.be.true
     })
   })
   describe('.find', () => {
-    it('response should contain the same entity based on query', async () => {
+    it('response should contain the same instance based on query', async () => {
       const frank = createPerson()
       frank.firstName = 'Frank'
       const entities = await client.create<Person>(dbID, 'Person', [frank])
       expect(entities.length).to.equal(1)
       const personID = entities[0]
 
-      const q: QueryJSON = {
-        ands: [
-          {
-            fieldPath: 'firstName',
-            operation: ComparisonJSON.Eq,
-            value: { string: frank.firstName },
-          },
-        ],
-      }
+      const q = new Where('firstName').eq(frank.firstName)
       const find = await client.find<Person>(dbID, 'Person', q)
       expect(find).to.not.be.undefined
       const found = find.instancesList
