@@ -5,6 +5,7 @@
 ;(global as any).WebSocket = require('isomorphic-ws')
 
 import { expect } from 'chai'
+import uuid from 'uuid/v4'
 import { QueryJSON, ComparisonJSON, Where, ReadTransaction, WriteTransaction } from './models'
 import { Client, ThreadID } from './index'
 
@@ -46,7 +47,7 @@ interface Person {
 
 const createPerson = (): Person => {
   return {
-    ID: '',
+    ID: uuid(),
     firstName: 'Adam',
     lastName: 'Doe',
     age: 21,
