@@ -53,7 +53,7 @@ export class WriteTransaction extends Transaction<WriteTransactionRequest, Write
       const createReq = new CreateRequest()
       const list: any[] = []
       values.forEach((v) => {
-        v['ID'] = uuid.v4()
+        v['ID'] = v['ID'] === null ? uuid.v4() : v['ID']
         list.push(Buffer.from(JSON.stringify(v)))
       })
       createReq.setInstancesList(list)

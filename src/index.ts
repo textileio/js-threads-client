@@ -175,7 +175,7 @@ export class Client {
     req.setCollectionname(collectionName)
     const list: any[] = []
     values.forEach((v) => {
-      v['ID'] = uuid.v4()
+      v['ID'] = v['ID'] === null ? uuid.v4() : v['ID']
       list.push(Buffer.from(JSON.stringify(v)))
     })
     req.setInstancesList(list)
@@ -320,18 +320,19 @@ export class Client {
           switch (at) {
             case 'ALL': {
               requestFilter.setAction(0)
+              break
             }
-            break
             case 'CREATE': {
               requestFilter.setAction(1)
+              break
             }
-            break
             case 'SAVE': {
               requestFilter.setAction(2)
+              break
             }
-            break
             case 'DELETE': {
               requestFilter.setAction(3)
+              break
             }
           }
         }

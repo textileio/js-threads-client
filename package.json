@@ -59,7 +59,7 @@
     "google-protobuf": "^3.10.0",
     "isomorphic-ws": "^4.0.1",
     "next-tick": "^1.1.0",
-    "uuid": "^7.0.2",
+    "uuid": "^3.4.0",
     "ws": "^7.2.3"
   },
   "devDependencies": {
@@ -68,7 +68,7 @@
     "@types/mocha": "^7.0.1",
     "@types/multibase": "^0.6.0",
     "@types/next-tick": "^1.0.0",
-    "@types/uuid": "^7.0.2",
+    "@types/uuid": "^3.4.0",
     "@typescript-eslint/eslint-plugin": "^2.26.0",
     "@typescript-eslint/parser": "^2.26.0",
     "chai": "^4.2.0",
