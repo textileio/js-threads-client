@@ -93,14 +93,14 @@ describe('Client', function () {
   })
   describe('.create', () => {
     it('response should contain a JSON parsable instancesList', async () => {
-      const instances = await client.create<Person>(dbID, 'Person', [createPerson()])
+      const instances = await client.create(dbID, 'Person', [createPerson()])
       expect(instances.length).to.equal(1)
     })
   })
   describe('.save', () => {
     it('response should be defined and be an empty object', async () => {
       const person = createPerson()
-      const instances = await client.create<Person>(dbID, 'Person', [person])
+      const instances = await client.create(dbID, 'Person', [person])
       expect(instances.length).to.equal(1)
       person.ID = instances[0]
       person!.age = 30
@@ -110,7 +110,7 @@ describe('Client', function () {
   })
   describe('.delete', () => {
     it('response should be defined and be an empty object', async () => {
-      const instances = await client.create<Person>(dbID, 'Person', [createPerson()])
+      const instances = await client.create(dbID, 'Person', [createPerson()])
       expect(instances.length).to.equal(1)
       const personID = instances[0]
       const deleted = await client.delete(dbID, 'Person', [personID])
@@ -130,7 +130,7 @@ describe('Client', function () {
     it('response should contain the same instance based on query', async () => {
       const frank = createPerson()
       frank.firstName = 'Frank'
-      const instances = await client.create<Person>(dbID, 'Person', [frank])
+      const instances = await client.create(dbID, 'Person', [frank])
       expect(instances.length).to.equal(1)
       const personID = instances[0]
 
@@ -167,7 +167,7 @@ describe('Client', function () {
     let existingPersonID: string
     let transaction: ReadTransaction | undefined
     before(async () => {
-      const instances = await client.create<Person>(dbID, 'Person', [createPerson()])
+      const instances = await client.create(dbID, 'Person', [createPerson()])
       existingPersonID = instances.pop()!
       transaction = client.readTransaction(dbID, 'Person')
     })
@@ -247,7 +247,7 @@ describe('Client', function () {
     const person = createPerson()
     let existingPersonID: string
     before(async () => {
-      const entities = await client.create<Person>(dbID, 'Person', [person])
+      const entities = await client.create(dbID, 'Person', [person])
       existingPersonID = entities.length ? entities[0] : ''
       person['ID'] = existingPersonID
     })
@@ -290,7 +290,7 @@ describe('Client', function () {
         person.age = 60 + i
         return person
       })
-      await client.create<Person>(dbID, 'Person', people)
+      await client.create(dbID, 'Person', people)
     })
     it('Should return a full list of entities matching the given query', async () => {
       const q = new Where('age').ge(60).and('age').lt(66).or(new Where('age').eq(67))

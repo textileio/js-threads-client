@@ -169,7 +169,7 @@ export class Client {
    * @param collectionName The human-readable name of the model to use.
    * @param values An array of model instances as JSON/JS objects.
    */
-  public async create<T = any>(dbID: Buffer, collectionName: string, values: any[]) {
+  public async create(dbID: Buffer, collectionName: string, values: any[]) {
     const req = new CreateRequest()
     req.setDbid(dbID)
     req.setCollectionname(collectionName)
