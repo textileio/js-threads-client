@@ -26,5 +26,5 @@ export const defaultConfig: Config = {
   debug: false,
   toJSON() {
     return { ...this }
-  }
+  },
 }

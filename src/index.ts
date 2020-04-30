@@ -72,7 +72,7 @@ export class Client {
           token = message.getToken()
         }
       })
-      client.onEnd(code => {
+      client.onEnd((code) => {
         client.close()
         if (code === grpc.Code.OK) {
           resolve(token)

@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable import/first */
-// Some hackery to get WebSocket in the global namespace on nodejs
-// @todo: Find a nicer way to do this...
-import { Libp2pCryptoIdentity } from '@textile/threads-core'
-
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 ;(global as any).WebSocket = require('isomorphic-ws')
+
+import { Libp2pCryptoIdentity } from '@textile/threads-core'
 
 import { expect } from 'chai'
 import { Where, ReadTransaction, WriteTransaction } from './models'
@@ -275,7 +273,7 @@ describe('Client', function () {
         [
           {
             collectionName: 'Person',
-            actionTypes: ['ALL']
+            actionTypes: ['ALL'],
           },
         ],
         callback,
