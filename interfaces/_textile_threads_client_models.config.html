@@ -60,7 +60,7 @@
 					<a href="_textile_threads_client_models.config.html">Config</a>
 				</li>
 			</ul>
-			<h1>Class Config</h1>
+			<h1>Interface Config</h1>
 		</div>
 	</div>
 </header>
@@ -70,7 +70,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>The default config required to connect to localhost Threads daemon</p>
+						<p>Configuration for Threads DB Client.</p>
 					</div>
 				</div>
 			</section>
@@ -82,86 +82,87 @@
 					</li>
 				</ul>
 			</section>
+			<section class="tsd-panel tsd-kind-interface tsd-parent-kind-external-module">
+				<h3 class="tsd-before-signature">Indexable</h3>
+				<div class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">[</span>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">any</span></div>
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Configuration for Threads DB Client.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Constructors</h3>
+							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_textile_threads_client_models.config.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_textile_threads_client_models.config.html#debug" class="tsd-kind-icon">debug</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_textile_threads_client_models.config.html#host" class="tsd-kind-icon">host</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_textile_threads_client_models.config.html#transport" class="tsd-kind-icon">transport</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
-							<h3>Properties</h3>
+							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_textile_threads_client_models.config.html#host" class="tsd-kind-icon">host</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_textile_threads_client_models.config.html#transport" class="tsd-kind-icon">transport</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="_textile_threads_client_models.config.html#tojson" class="tsd-kind-icon">toJSON</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
-					<a name="constructor" class="tsd-anchor"></a>
-					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Config<span class="tsd-signature-symbol">(</span>host<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, transport<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">TransportFactory</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_textile_threads_client_models.config.html" class="tsd-signature-type">Config</a></li>
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="debug" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> debug</h3>
+					<div class="tsd-signature tsd-kind-icon">debug<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/textileio/js-threads-client/blob/master/src/models/config.ts#L14">src/models/config.ts:14</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="host" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> host</h3>
+					<div class="tsd-signature tsd-kind-icon">host<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/textileio/js-threads-client/blob/master/src/models/config.ts#L12">src/models/config.ts:12</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="transport" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> transport</h3>
+					<div class="tsd-signature tsd-kind-icon">transport<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">grpc.TransportFactory</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/textileio/js-threads-client/blob/master/src/models/config.ts#L13">src/models/config.ts:13</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="tojson" class="tsd-anchor"></a>
+					<h3>toJSON</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">toJSON<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/textileio/js-threads-client/blob/master/src/models/config.ts#L19">src/models/config.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/textileio/js-threads-client/blob/master/src/models/config.ts#L15">src/models/config.ts:15</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> host: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;http://127.0.0.1:6007&quot;</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> transport: <span class="tsd-signature-type">TransportFactory</span><span class="tsd-signature-symbol"> =&nbsp;grpc.WebsocketTransport()</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_textile_threads_client_models.config.html" class="tsd-signature-type">Config</a></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="host" class="tsd-anchor"></a>
-					<h3>host</h3>
-					<div class="tsd-signature tsd-kind-icon">host<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/textileio/js-threads-client/blob/master/src/models/config.ts#L22">src/models/config.ts:22</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The Threads daemon host path and port</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="transport" class="tsd-anchor"></a>
-					<h3>transport</h3>
-					<div class="tsd-signature tsd-kind-icon">transport<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TransportFactory</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/textileio/js-threads-client/blob/master/src/models/config.ts#L24">src/models/config.ts:24</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Override the default API transport. For advanced usage only.</p>
-						</div>
-					</div>
 				</section>
 			</section>
 		</div>
@@ -193,59 +194,65 @@
 					<li class=" tsd-kind-enum tsd-parent-kind-external-module">
 						<a href="../enums/_textile_threads_client_models.comparisonjson.html" class="tsd-kind-icon">ComparisonJSON</a>
 					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/_textile_threads_client_models.criterion.html" class="tsd-kind-icon">Criterion</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/_textile_threads_client_models.query.html" class="tsd-kind-icon">Query</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/_textile_threads_client_models.readtransaction.html" class="tsd-kind-icon">Read<wbr>Transaction</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-external-module">
+						<a href="../classes/_textile_threads_client_models.writetransaction.html" class="tsd-kind-icon">Write<wbr>Transaction</a>
+					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class tsd-parent-kind-external-module">
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module">
 						<a href="_textile_threads_client_models.config.html" class="tsd-kind-icon">Config</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="_textile_threads_client_models.config.html#constructor" class="tsd-kind-icon">constructor</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_textile_threads_client_models.config.html#debug" class="tsd-kind-icon">debug</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_textile_threads_client_models.config.html#host" class="tsd-kind-icon">host</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_textile_threads_client_models.config.html#transport" class="tsd-kind-icon">transport</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="_textile_threads_client_models.config.html#tojson" class="tsd-kind-icon">toJSON</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_textile_threads_client_models.criterion.html" class="tsd-kind-icon">Criterion</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_textile_threads_client_models.query.html" class="tsd-kind-icon">Query</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_textile_threads_client_models.readtransaction.html" class="tsd-kind-icon">Read<wbr>Transaction</a>
-					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-external-module">
-						<a href="_textile_threads_client_models.writetransaction.html" class="tsd-kind-icon">Write<wbr>Transaction</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+						<a href="_textile_threads_client_models.criterionjson.html" class="tsd-kind-icon">CriterionJSON</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/_textile_threads_client_models.criterionjson.html" class="tsd-kind-icon">CriterionJSON</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/_textile_threads_client_models.filter.html" class="tsd-kind-icon">Filter</a>
+						<a href="_textile_threads_client_models.filter.html" class="tsd-kind-icon">Filter</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="../interfaces/_textile_threads_client_models.instance.html" class="tsd-kind-icon">Instance</a>
+						<a href="_textile_threads_client_models.instance.html" class="tsd-kind-icon">Instance</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="../interfaces/_textile_threads_client_models.instancelist.html" class="tsd-kind-icon">Instance<wbr>List</a>
+						<a href="_textile_threads_client_models.instancelist.html" class="tsd-kind-icon">Instance<wbr>List</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/_textile_threads_client_models.queryjson.html" class="tsd-kind-icon">QueryJSON</a>
+						<a href="_textile_threads_client_models.queryjson.html" class="tsd-kind-icon">QueryJSON</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/_textile_threads_client_models.sortjson.html" class="tsd-kind-icon">SortJSON</a>
+						<a href="_textile_threads_client_models.sortjson.html" class="tsd-kind-icon">SortJSON</a>
 					</li>
 					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
-						<a href="../interfaces/_textile_threads_client_models.valuejson.html" class="tsd-kind-icon">ValueJSON</a>
+						<a href="_textile_threads_client_models.valuejson.html" class="tsd-kind-icon">ValueJSON</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module">
 						<a href="../modules/_textile_threads_client_models.html#value" class="tsd-kind-icon">Value</a>
+					</li>
+					<li class=" tsd-kind-object-literal tsd-parent-kind-external-module">
+						<a href="../modules/_textile_threads_client_models.html#defaultconfig" class="tsd-kind-icon">default<wbr>Config</a>
 					</li>
 				</ul>
 			</nav>
