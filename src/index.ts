@@ -7,6 +7,7 @@ import { grpc } from '@improbable-eng/grpc-web'
 import { API, APIGetToken } from '@textile/threads-client-grpc/api_pb_service'
 import * as pb from '@textile/threads-client-grpc/api_pb'
 import nextTick from 'next-tick'
+import { Identity } from '@textile/threads-core'
 import { Multiaddr } from '@textile/multiaddr'
 import { ThreadID } from '@textile/threads-id'
 import { encode, decode } from 'bs58'
@@ -27,10 +28,6 @@ import {
 export { ThreadID }
 export { Config, Instance, QueryJSON, defaultConfig }
 export { Query, Where }
-
-export interface Identity {
-
-}
 
 /**
  * Client is a web-gRPC wrapper client for communicating with a webgRPC-enabled Textile server.
@@ -53,7 +50,7 @@ export class Client {
     grpc.setDefaultTransport(this.config.transport ?? grpc.WebsocketTransport())
   }
 
-  async getToken(identity: any) { // @todo: Specify Identity type
+  async getToken(identity: Identity) {
     const client = grpc.client<pb.GetTokenRequest, pb.GetTokenReply, APIGetToken>(API.GetToken, {
       host: this.config.host ?? '',
     })
@@ -71,14 +68,12 @@ export class Client {
           const req = new pb.GetTokenRequest()
           req.setSignature(sig)
           client.send(req)
-          return
         } else if (message.hasToken()) {
           token = message.getToken()
         }
-        client.finishSend()
       })
       client.onEnd(code => {
-        client.close() // Redundant?
+        client.close()
         if (code === grpc.Code.OK) {
           resolve(token)
         } else {
@@ -86,14 +81,11 @@ export class Client {
         }
       })
       const req = new pb.GetTokenRequest()
-      req.setKey(identity.public.bytes.toString('base64'))
-      client.start(this.config._wrapMetadata())
+      req.setKey(identity.public.toString())
+      client.start(this.config.toJSON())
       client.send(req)
+      // client.finishSend()
     })
-  }
-
-  public async deleteDB() {
-    return 'blah'
   }
 
   /**
@@ -332,19 +324,19 @@ export class Client {
         for (const at of filter.actionTypes) {
           switch (at) {
             case 'ALL': {
-              requestFilter.setAction(0)
+              requestFilter.setAction(pb.ListenRequest.Filter.Action.ALL)
               break
             }
             case 'CREATE': {
-              requestFilter.setAction(1)
+              requestFilter.setAction(pb.ListenRequest.Filter.Action.CREATE)
               break
             }
             case 'SAVE': {
-              requestFilter.setAction(2)
+              requestFilter.setAction(pb.ListenRequest.Filter.Action.SAVE)
               break
             }
             case 'DELETE': {
-              requestFilter.setAction(3)
+              requestFilter.setAction(pb.ListenRequest.Filter.Action.DELETE)
               break
             }
           }
@@ -367,9 +359,9 @@ export class Client {
       },
       onEnd: (status: grpc.Code, message: string, _trailers: grpc.Metadata) => {
         if (status !== grpc.Code.OK) {
-          return callback(undefined, new Error(message))
+          nextTick(() => callback(undefined, new Error(message)))
         }
-        callback()
+        nextTick(callback)
       },
     })
     return res.close.bind(res)
