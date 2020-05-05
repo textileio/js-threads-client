@@ -1,3 +1,5 @@
+**[DEPRECATED Repo]: This project/library has been moved to https://github.com/textileio/js-threads**
+
 # js-threads-client
 
 [![Made by Textile](https://img.shields.io/badge/made%20by-Textile-informational.svg?style=popout-square)](https://textile.io)
