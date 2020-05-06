@@ -1,4 +1,4 @@
-**[DEPRECATED Repo]: This project/library has been moved to https://github.com/textileio/js-threads**
+**[DEPRECATED]: This project/library has been moved to https://github.com/textileio/js-threads**
 
 # js-threads-client
 
