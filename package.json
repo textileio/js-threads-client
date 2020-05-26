@@ -52,7 +52,7 @@
   "license": "MIT",
   "dependencies": {
     "@improbable-eng/grpc-web": "^0.12.0",
-    "@textile/multiaddr": "0.0.2",
+    "@textile/multiaddr": "0.0.7",
     "@textile/threads-client-grpc": "^0.1.14",
     "@textile/threads-id": "0.0.1",
     "@types/google-protobuf": "^3.7.2",
